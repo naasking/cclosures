@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __DANDY_H__
-#define __DANDY_H__
+#ifndef __CLOSURE_H__
+#define __CLOSURE_H__
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -323,4 +323,4 @@ clo_t clo_lift(fn_t fn, unsigned argc, unsigned argn, ...);
 //#define clo_lift1(fn, arg0) clo_lift({ fn }, struct { arg0 }, sizeof(val_t))
 //#define clo_lift2(fn, arg0) clo_lift({ fn }, { arg0 }, 2 * sizeof(val_t))
 
-#endif /* __DANDY_H__ */
+#endif /* __CLOSURE_H__ */
