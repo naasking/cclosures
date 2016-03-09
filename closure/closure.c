@@ -10,15 +10,33 @@
 clo_t clo_lift(fn_t fn, unsigned argc, unsigned argn, ...) {
 	va_list args;
 	va_start(args, argn);
-	clo_t c = (clo_t)malloc(sizeof(struct clo) + (argn - 1) * sizeof(val_t));
+	clo_t c = (clo_t)malloc(clo_size(argn));
+	clo_init(c, fn, argc, 0);
 	c->fn = fn;
 	c->argc = argc;
+	val_t *env = c->env;
 	if (argn == 1) {
-		c->env = va_arg(args, val_t);
+		env[0] = va_arg(args, val_t);
 	} else {
-		c->env.p = c-> data;
-		val_t *env = c->data;
-		for (int i = 0; i < argn; ++i)
+		env[0] = (val_t) { .p = env };
+		for (int i = 1; i < argn; ++i)
+			env[i] = va_arg(args, val_t);
+	}
+	va_end(args);
+	return c;
+}
+
+clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...) {
+	va_list args;
+	va_start(args, argn);
+	c->fn = fn;
+	c->argc = argc;
+	val_t *env = c->env;
+	if (argn == 1) {
+		env[0] = va_arg(args, val_t);
+	} else {
+		env[0] = (val_t){ .p = env };
+		for (int i = 1; i < argn; ++i)
 			env[i] = va_arg(args, val_t);
 	}
 	va_end(args);
