@@ -8,6 +8,7 @@
 #include <limits.h>
 #include <stdarg.h>
 #include <meta.h>
+#include <errno.h>
 
 #if defined(_WIN64) || defined(WIN64) || defined(__sparc64__) || defined(_M_X64) || defined(_M_AMD64) || defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || defined(__x86_64) || defined(__ppc64__) || defined(__PPC64__) || defined(__ppc64) || defined(__LP__) || defined(_LP64) || defined(_AMD64_) || defined(_____LP64_____) || defined(__LP64__)
 #define WD64BIT
@@ -120,14 +121,19 @@ struct clo {
 };
 
 /*
-* The offset of the argument counts in the header.
-*/
+ * The offset of the argument counts in the header.
+ */
 #define CLO_ARGC_OFF 4
+
+/*
+ * The maximum number of arguments.
+ */
+#define CLO_ARGS_MAX 16
 
 /*
  * The number of function arguments.
  */
-#define clo_argc(c) ((c)->hdr >> CLO_ARGC_OFF)
+#define clo_argc(c) (((c)->hdr >> CLO_ARGC_OFF) & 0x07)
 
 /*
  * The number of remaining arguments to apply.
@@ -147,27 +153,29 @@ struct clo {
 /*
  * The size of a closure for the given number of arguments.
  */
-#define clo_size(argn) sizeof(struct clo) * clo_esize(argn)
+#define clo_size(argn) sizeof(struct clo) + clo_esize(argn)
 
- /*
+/*
  * Lift a C function pointer and its context to a closure with the given allocator.
  *
  * The 'alloc' parameter must conform to malloc's signature.
  */
 #define clo_liftw(alloc, fn, argc, ...) clo_init((clo_t)alloc(clo_size(VA_ARG_0(__VA_ARGS__))), fn, (argc), VA_ARG_FMT(VA_ARGC(__VA_ARGS__)-1, __VA_ARGS__))
 
- /*
+/*
  * Lift a C function pointer and its context to a closure using alloca.
  */
 #define clo_lifta(fn, argc, ...) clo_liftw(alloca, fn, argc, __VA_ARGS__)
 
- /*
+/*
  * Lift a C function pointer and its context to a closure using malloc.
  */
 #define clo_lift(fn, argc, ...) clo_liftw(malloc, fn, argc, __VA_ARGS__)
 
- /*
+/*
  * Initialize an existing closure record with the given arguments.
+ *
+ * ERROR: returns E2BIG if argc exceeds the CLO_ARGS_MAX.
  */
 clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
 
@@ -175,7 +183,7 @@ clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
 /* select the appropriate function signature given the provided arguments */
 #define _clo_fn(...) VA_ARG_CAT(VA_ARG_0(__VA_ARGS__)->fn.fn, VA_ARGC(VA_ARG_SKIP_1(__VA_ARGS__)))
 
-/* 
+/*
  * Invoke the raw function with all parameters given. This macro assumes
  * no closure environment.
  */
@@ -184,43 +192,49 @@ clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
 )
 
 /*
-* Call a closure with an environment and a known number of arguments. The first argument must be the closure parameter.
-* For N args, this generates an expression call of the form:
-*   (assert(clo_argc(clo) == N), clo->fn.fnN(clo->env[0], arg0, ..., argN))
-* in DEBUG mode, the assertion checks that the call is valid, and the subsequent expression actually executes it.
-*/
+ * Call a closure with an environment and a known number of arguments. The first argument must be the closure parameter.
+ * For N args, this generates an expression call of the form:
+ *   (assert(clo_argc(clo) == N), clo->fn.fnN(clo->env[0], arg0, ..., argN))
+ * in DEBUG mode, the assertion checks that the call is valid, and the subsequent expression actually executes it.
+ */
 #define clo_call(...) clo_invoke(VA_ARG_0(__VA_ARGS__), VA_ARG_FMT(VA_ARG_0(__VA_ARGS__)->env[0], __VA_ARGS__))
 
 /*
  * Apply a curried closure. The first argument must be the closure parameter.
  * NOTE: currently incomplete, as I need a switch dispatching on the total number of args.
  */
-#define clo_apply(...) clo_invoke(VA_ARG_0(__VA_ARGS__), VA_ARG_FMT(VA_ARG_0(__VA_ARGS__)->env[0], __VA_ARGS__))
+#define clo_apply(out, ...) VA_ARG_CAT(CLO_APPLY_, VA_ARGC(VA_ARG_SKIP_1(__VA_ARGS__)))(out, __VA_ARGS__)
 
 
 /*
  * Applying closures.
  */
-//#define clo_invoke(clo) clo->fn.fn0()
-#define clo_apply0(clo) (assert(clo_argr(clo) == 0),\
-	clo_argc(clo) == 0 ? clo->fn.fn0():\
-	clo_argc(clo) == 1 ? clo->fn.fn1(clo->env[0]):\
-	clo_argc(clo) == 2 ? clo->fn.fn2(clo->env[0], clo->env[1]):\
-	clo_argc(clo) == 3 ? clo->fn.fn3(clo->env[0], clo->env[1], clo->env[2]):\
-	clo_argc(clo) == 4 ? clo->fn.fn4(clo->env[0], clo->env[1], clo->env[2], clo->env[3]):\
-	clo_argc(clo) == 5 ? clo->fn.fn5(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4]):\
-	clo_argc(clo) == 6 ? clo->fn.fn6(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5]):\
-	clo_argc(clo) == 7 ? clo->fn.fn7(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6]):\
-	clo_argc(clo) == 8 ? clo->fn.fn8(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7]):\
-	clo_argc(clo) == 9 ? clo->fn.fn9(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8]):\
-	clo_argc(clo) == 10 ? clo->fn.fn10(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9]):\
-	clo_argc(clo) == 11 ? clo->fn.fn11(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10]):\
-	clo_argc(clo) == 12 ? clo->fn.fn12(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11]):\
-	clo_argc(clo) == 13 ? clo->fn.fn13(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11], clo->env[12]):\
-	clo_argc(clo) == 14 ? clo->fn.fn14(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11], clo->env[12], clo->env[13]):\
-	clo_argc(clo) == 15 ? clo->fn.fn15(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11], clo->env[12], clo->env[13], clo->env[14]):\
-                          clo->fn.fn16(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11], clo->env[12], clo->env[13], clo->env[14], clo->env[15])\
-)
+#define CLO_CASE(i, out, clo) case INC(i): out = CAT(clo->fn.fn, INC(i))(clo->env[0] REPEAT(i, CLO_ENV, out, clo)); break;
+#define CLO_ENV(i, out, clo) ,clo->env[i]
+#define CLO_ERR(clo) default:\
+	fprintf(stderr, "%s line %d: closures can only accept 16 arguments, but given: %d", __FILE__, __LINE__, clo_argc(clo));\
+	exit(1);
+
+#define CLO_APPLY_0(out, clo) assert(clo_argr(clo) == 0);\
+switch(clo_argc(clo)) {\
+case 0: out = clo->fn.fn0(); break;\
+EVAL(REPEAT(16, CLO_CASE,  out, clo))\
+CLO_ERR(clo)\
+}
+
+#define CLO_APPLY_1(out, clo, arg0) assert(clo_argr(clo) == 1);\
+switch(clo_argc(clo)) {\
+case 0: out = clo->fn.fn0(); break;\
+EVAL(REPEAT(16, CLO_CASE, out, clo))\
+CLO_ERR(clo)\
+}
+
+#define CLO_APPLY_2(out, clo, arg0, arg1) assert(clo_argr(clo) == 2);\
+switch(clo_argc(clo)) {\
+EVAL(REPEAT(16, CLO_CASE, out, clo))\
+CLO_ERR(clo)\
+}
+
 #define clo_apply1(clo, arg0) (assert(clo_argr(clo) == 1),\
 	clo_argc(clo) == 1 ? clo->fn.fn1(arg0):\
 	clo_argc(clo) == 2 ? clo->fn.fn2(clo->env[0], arg0):\

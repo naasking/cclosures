@@ -9,6 +9,10 @@
 
 
 clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...) {
+	if (argc > CLO_ARGS_MAX) {
+		errno = E2BIG;
+		return NULL;
+	}
 	va_list args;
 	va_start(args, argn);
 	c->fn = fn;
