@@ -26,5 +26,8 @@
     <ClInclude Include="closure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="meta.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

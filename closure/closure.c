@@ -1,5 +1,5 @@
 /*
- * The val closure library.
+ * Closure combinators.
  */
 
 #include "closure.h"
@@ -7,13 +7,12 @@
 #include <math.h>
 #include <stdarg.h>
 
-clo_t clo_lift(fn_t fn, unsigned argc, unsigned argn, ...) {
+
+clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...) {
 	va_list args;
 	va_start(args, argn);
-	clo_t c = (clo_t)malloc(sizeof(struct clo) + argn * sizeof(val_t));
 	c->fn = fn;
-	c->argc = argc;
-	c->argn = argn;
+	c->hdr = (argc << CLO_ARGC_OFF) | ((argc - argn) << (CLO_ARGC_OFF - 4));
 	val_t *env = c->env;
 	for (int i = 0; i < argn; ++i)
 		env[i] = va_arg(args, val_t);
