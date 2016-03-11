@@ -209,9 +209,8 @@ clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
 /*
  * Closure application overloads.
  */
-#define CLO_CASE(i, j, out, clo, ...) case i: out = CAT(clo->fn.fn, j)(REPEAT(i, CLO_ENV, out, clo) CLO_ARG(i, __VA_ARGS__)); break;
+#define CLO_CASE(i, j, out, clo, ...) case i: out = CAT(clo->fn.fn, j)(REPEAT(i, CLO_ENV, out, clo) COMMA_IF(i) __VA_ARGS__); break;
 #define CLO_ENV(i, out, clo) COMMA_IF(i) clo->env[i]
-#define CLO_ARG(i, ...) COMMA_IF(i) __VA_ARGS__
 #define CLO_ARG_ERR(clo) default:\
 	fprintf(stderr, "%s line %d: closures can only accept 16 arguments, but found: %d", __FILE__, __LINE__, clo_argc(clo));\
 	exit(1);
