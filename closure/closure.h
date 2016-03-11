@@ -149,6 +149,29 @@ struct clo {
  */
 #define clo_size(argn) sizeof(struct clo) * clo_esize(argn)
 
+ /*
+ * Lift a C function pointer and its context to a closure with the given allocator.
+ *
+ * The 'alloc' parameter must conform to malloc's signature.
+ */
+#define clo_liftw(alloc, fn, argc, ...) clo_init((clo_t)alloc(clo_size(VA_ARG_0(__VA_ARGS__))), fn, (argc), VA_ARG_FMT(VA_ARGC(__VA_ARGS__)-1, __VA_ARGS__))
+
+ /*
+ * Lift a C function pointer and its context to a closure using alloca.
+ */
+#define clo_lifta(fn, argc, ...) clo_liftw(alloca, fn, argc, __VA_ARGS__)
+
+ /*
+ * Lift a C function pointer and its context to a closure using malloc.
+ */
+#define clo_lift(fn, argc, ...) clo_liftw(malloc, fn, argc, __VA_ARGS__)
+
+ /*
+ * Initialize an existing closure record with the given arguments.
+ */
+clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
+
+
 /* select the appropriate function signature given the provided arguments */
 #define _clo_fn(...) VA_ARG_CAT(VA_ARG_0(__VA_ARGS__)->fn.fn, VA_ARGC(VA_ARG_SKIP_1(__VA_ARGS__)))
 
@@ -361,28 +384,6 @@ struct clo {
 	clo->fn.fn16(clo->env[0], arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)\
 )
 
-
-/*
-* Lift a C function pointer and its context to a closure using the given allocator.
-*
-* The 'alloc' parameter must conform to malloc's signature.
-*/
-#define clo_liftw(alloc, fn, argc, ...) clo_init((clo_t)alloc(clo_size(VA_ARG_0(__VA_ARGS__))), fn, (argc), VA_ARG_FMT(VA_ARGC(__VA_ARGS__)-1, __VA_ARGS__))
-
-/*
- * Lift a C function pointer and its context to a closure using alloca.
- */
-#define clo_lifta(fn, argc, ...) clo_liftw(alloca, fn, argc, __VA_ARGS__)
-
-/*
- * Lift a C function pointer and its context to a closure using malloc.
- */
-#define clo_lift(fn, argc, ...) clo_liftw(malloc, fn, argc, __VA_ARGS__)
-
-/*
- * Initialize an existing closure record with the given arguments.
- */
-clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
 
 /*
  * Partial application can be a set of macros like apply that simple invoke clo_lift.
