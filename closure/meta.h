@@ -1,4 +1,4 @@
-once
+#pragma once
 #ifndef __META_H__
 #define __META_H__
 

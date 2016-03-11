@@ -213,7 +213,7 @@ clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
 //#define CLO_CASE(i, j, out, clo, ...) case i: out = CAT(clo->fn.fn, i)(REPEAT(i, CLO_ENV, out, clo) REPEAT(j, CLO_ARG, VA_EMPTY); break;
 //#define CLO_CASE(i, j, out, clo, ...) case i: out = CAT(clo->fn.fn, i)(REPEAT(i, CLO_ENV, out, clo) WHEN(NOT_EQUAL(i,j))REPEAT(j, CLO_ARG)); break;
 //#define CLO_ARG(i, _) COMMA_IF(i) CAT(arg,i)
-#define CLO_CASE(i, j, k, out, clo, ...) case i: out = CAT(clo->fn.fn, j)(REPEAT(i, CLO_ENV, out, clo) CLO_ARG(k, __VA_ARGS__)); break;
+#define CLO_CASE(i, j, out, clo, ...) case i: out = CAT(clo->fn.fn, j)(REPEAT(i, CLO_ENV, out, clo) CLO_ARG(i, __VA_ARGS__)); break;
 #define CLO_ENV(i, out, clo) COMMA_IF(i) clo->env[i]
 #define CLO_ARG(i, ...) COMMA_IF(i) __VA_ARGS__
 #define CLO_ARG_ERR(clo) default:\
@@ -223,25 +223,25 @@ clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
 // use repeater macros to generate a switch dispatching on the number of expected arguments
 #define CLO_APPLY_0(out, clo) assert(clo_argr(clo) == 0);\
 switch(clo_argc(clo)) {\
-EVAL(REPEAT2(17, 17, CLO_CASE, 0, out, clo, VA_EMPTY))\
+EVAL(REPEAT2(17, 17, CLO_CASE, out, clo, VA_EMPTY))\
 CLO_ARG_ERR(clo)\
 }
 
 #define CLO_APPLY_1(out, clo, arg0) assert(clo_argr(clo) == 1);\
 switch(clo_argc(clo)-1) {\
-EVAL(REPEAT2(16, 17, CLO_CASE, 1, out, clo, arg0))\
+EVAL(REPEAT2(16, 17, CLO_CASE, out, clo, arg0))\
 CLO_ARG_ERR(clo)\
 }
 
 #define CLO_APPLY_2(out, clo, arg0, arg1) assert(clo_argr(clo) == 2);\
 switch(clo_argc(clo)-2) {\
-EVAL(REPEAT2(15, 17, CLO_CASE, 2, out, clo, arg0, arg1))\
+EVAL(REPEAT2(15, 17, CLO_CASE, out, clo, arg0, arg1))\
 CLO_ARG_ERR(clo)\
 }
 
 #define CLO_APPLY_3(out, clo, arg0, arg1, arg2) assert(clo_argr(clo) == 3);\
 switch(clo_argc(clo)-3) {\
-EVAL(REPEAT2(14, 17, CLO_CASE, 3, out, clo, arg0, arg1, arg2))\
+EVAL(REPEAT2(14, 17, CLO_CASE, out, clo, arg0, arg1, arg2))\
 CLO_ARG_ERR(clo)\
 }
 
