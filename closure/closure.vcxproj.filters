@@ -29,5 +29,8 @@
     <ClInclude Include="meta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="cloak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
