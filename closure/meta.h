@@ -99,7 +99,7 @@ once
 #define VA_ARG_FMT_14(_0, ...) _0,VA_ARG_SKIP_1(__VA_ARGS__)
 #define VA_ARG_FMT_15(_0, ...) _0,VA_ARG_SKIP_1(__VA_ARGS__)
 
-
+#define VA_EMPTY
 
 #define SUBTR(x, y) CAT(SUBTR_, x, _, y)
 #define SUBTR_16_1 15

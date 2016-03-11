@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 	printf("x = %u\n", x.si);
 
 	clo_t c2 = clo_lift((fn_t) { .fn1 = foo }, 1, 0);
-	clo_apply(x, c2, arg);
+	clo_apply(x, c2, arg, x, x);
 	printf("x = %u\n", x.si);
 	return 0;
 }

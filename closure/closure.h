@@ -210,9 +210,12 @@ clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
  * Closure application overloads.
  */
 //#define CLO_CASE(i, out, ...) case i: out = CAT(VA_ARG_0(__VA_ARGS__)->fn.fn, i)(REPEAT(i, CLO_ENV, out, VA_ARG_0(__VA_ARGS__))); break;
-#define CLO_CASE(i, out, clo, ...) case i: out = CAT(clo->fn.fn, i)(REPEAT(i, CLO_ENV, out, clo)); break;
+//#define CLO_CASE(i, j, out, clo, ...) case i: out = CAT(clo->fn.fn, i)(REPEAT(i, CLO_ENV, out, clo) REPEAT(j, CLO_ARG, VA_EMPTY); break;
+//#define CLO_CASE(i, j, out, clo, ...) case i: out = CAT(clo->fn.fn, i)(REPEAT(i, CLO_ENV, out, clo) WHEN(NOT_EQUAL(i,j))REPEAT(j, CLO_ARG)); break;
+#define CLO_CASE(i, j, out, clo, ...) case i: out = CAT(clo->fn.fn, i)(REPEAT(i, CLO_ENV, out, clo) CLO_ARG(j, __VA_ARGS__)); break;
 #define CLO_ENV(i, out, clo) COMMA_IF(i) clo->env[i]
-#define CLO_ARG(i, arg) ,arg ## i
+//#define CLO_ARG(i, _) COMMA_IF(i) CAT(arg,i)
+#define CLO_ARG(i, ...) COMMA_IF(i) __VA_ARGS__
 #define CLO_ARG_ERR(clo) default:\
 	fprintf(stderr, "%s line %d: closures can only accept 16 arguments, but found: %d", __FILE__, __LINE__, clo_argc(clo));\
 	exit(1);
@@ -220,73 +223,28 @@ clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
 // use repeater macros to generate a switch dispatching on the number of expected arguments
 #define CLO_APPLY_0(out, clo) assert(clo_argr(clo) == 0);\
 switch(clo_argc(clo)) {\
-EVAL(REPEAT(16, CLO_CASE,  out, clo))\
+EVAL(REPEAT(17, CLO_CASE, 0, out, clo, VA_EMPTY))\
 CLO_ARG_ERR(clo)\
 }
 
 #define CLO_APPLY_1(out, clo, arg0) assert(clo_argr(clo) == 1);\
-switch(clo_argc(clo)) {\
-EVAL(REPEAT(16, CLO_CASE, out, clo))\
+switch(clo_argc(clo)-1) {\
+EVAL(REPEAT(16, CLO_CASE, out, 1, clo, arg0))\
 CLO_ARG_ERR(clo)\
 }
 
 #define CLO_APPLY_2(out, clo, arg0, arg1) assert(clo_argr(clo) == 2);\
-switch(clo_argc(clo)) {\
-EVAL(REPEAT(16, CLO_CASE, out, clo, arg0, arg1))\
+switch(clo_argc(clo)-2) {\
+EVAL(REPEAT(15, CLO_CASE, out, 2, clo, arg0, arg1))\
 CLO_ARG_ERR(clo)\
 }
 
-#define clo_apply1(clo, arg0) (assert(clo_argr(clo) == 1),\
-	clo_argc(clo) == 1 ? clo->fn.fn1(arg0):\
-	clo_argc(clo) == 2 ? clo->fn.fn2(clo->env[0], arg0):\
-	clo_argc(clo) == 3 ? clo->fn.fn3(clo->env[0], clo->env[1], arg0):\
-	clo_argc(clo) == 4 ? clo->fn.fn4(clo->env[0], clo->env[1], clo->env[2], arg0):\
-	clo_argc(clo) == 5 ? clo->fn.fn5(clo->env[0], clo->env[1], clo->env[2], clo->env[3], arg0):\
-	clo_argc(clo) == 6 ? clo->fn.fn6(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], arg0):\
-	clo_argc(clo) == 7 ? clo->fn.fn7(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], arg0):\
-	clo_argc(clo) == 8 ? clo->fn.fn8(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], arg0):\
-	clo_argc(clo) == 9 ? clo->fn.fn9(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], arg0):\
-	clo_argc(clo) == 10 ? clo->fn.fn10(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], arg0):\
-	clo_argc(clo) == 11 ? clo->fn.fn11(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], arg0):\
-	clo_argc(clo) == 12 ? clo->fn.fn12(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], arg0):\
-	clo_argc(clo) == 13 ? clo->fn.fn13(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11], arg0):\
-	clo_argc(clo) == 14 ? clo->fn.fn14(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11], clo->env[12], arg0):\
-	clo_argc(clo) == 15 ? clo->fn.fn15(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11], clo->env[12], clo->env[13], arg0):\
-                          clo->fn.fn16(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11], clo->env[12], clo->env[13], clo->env[14], arg0)\
-)
-#define clo_apply2(clo, arg0, arg1) (assert(clo_argr(clo) == 2),\
-	clo_argc(clo) == 2 ? clo->fn.fn2(arg0, arg1):\
-	clo_argc(clo) == 3 ? clo->fn.fn3(clo->env[0], arg0, arg1):\
-	clo_argc(clo) == 4 ? clo->fn.fn4(clo->env[0], clo->env[1], arg0, arg1):\
-	clo_argc(clo) == 5 ? clo->fn.fn5(clo->env[0], clo->env[1], clo->env[2], arg0, arg1):\
-	clo_argc(clo) == 6 ? clo->fn.fn6(clo->env[0], clo->env[1], clo->env[2], clo->env[3], arg0, arg1):\
-	clo_argc(clo) == 7 ? clo->fn.fn7(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], arg0, arg1):\
-	clo_argc(clo) == 8 ? clo->fn.fn8(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], arg0, arg1):\
-	clo_argc(clo) == 9 ? clo->fn.fn9(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], arg0, arg1):\
-	clo_argc(clo) == 10 ? clo->fn.fn10(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], arg0, arg1):\
-	clo_argc(clo) == 11 ? clo->fn.fn11(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], arg0, arg1):\
-	clo_argc(clo) == 12 ? clo->fn.fn12(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9],  arg0, arg1):\
-	clo_argc(clo) == 13 ? clo->fn.fn13(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], arg0, arg1):\
-	clo_argc(clo) == 14 ? clo->fn.fn14(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11], arg0, arg1):\
-	clo_argc(clo) == 15 ? clo->fn.fn15(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11], clo->env[12], arg0, arg1):\
-					      clo->fn.fn16(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11], clo->env[12], clo->env[13], arg0, arg1)\
-)
-#define clo_apply3(clo, arg0, arg1, arg2) (assert(clo_argr(clo) == 3),\
-	clo_argc(clo) == 3 ? clo->fn.fn3(arg0, arg1, arg2):\
-	clo_argc(clo) == 4 ? clo->fn.fn4(clo->env[0], arg0, arg1, arg2):\
-	clo_argc(clo) == 5 ? clo->fn.fn5(clo->env[0], clo->env[1], arg0, arg1, arg2):\
-	clo_argc(clo) == 6 ? clo->fn.fn6(clo->env[0], clo->env[1], clo->env[2], arg0, arg1, arg2):\
-	clo_argc(clo) == 7 ? clo->fn.fn7(clo->env[0], clo->env[1], clo->env[2], clo->env[3], arg0, arg1, arg2):\
-	clo_argc(clo) == 8 ? clo->fn.fn8(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], arg0, arg1, arg2):\
-	clo_argc(clo) == 9 ? clo->fn.fn9(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], arg0, arg1, arg2):\
-	clo_argc(clo) == 10 ? clo->fn.fn10(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], arg0, arg1, arg2):\
-	clo_argc(clo) == 11 ? clo->fn.fn11(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], arg0, arg1, arg2):\
-	clo_argc(clo) == 12 ? clo->fn.fn12(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], arg0, arg1, arg2):\
-	clo_argc(clo) == 13 ? clo->fn.fn13(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], arg0, arg1, arg2):\
-	clo_argc(clo) == 14 ? clo->fn.fn14(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], arg0, arg1, arg2):\
-	clo_argc(clo) == 15 ? clo->fn.fn15(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11],  arg0, arg1, arg2):\
-                          clo->fn.fn16(clo->env[0], clo->env[1], clo->env[2], clo->env[3], clo->env[4], clo->env[5], clo->env[6], clo->env[7], clo->env[8], clo->env[9], clo->env[10], clo->env[11], clo->env[12], arg0, arg1, arg2)\
-)
+#define CLO_APPLY_3(out, clo, arg0, arg1, arg2) assert(clo_argr(clo) == 3);\
+switch(clo_argc(clo)-3) {\
+EVAL(REPEAT(14, CLO_CASE, 3, out, clo, arg0, arg1, arg2))\
+CLO_ARG_ERR(clo)\
+}
+
 #define clo_apply4(clo, arg0, arg1, arg2, arg3) (assert(clo_argr(clo) == 4),\
 	clo_argc(clo) == 4 ? clo->fn.fn4(arg0, arg1, arg2, arg3):\
 	clo_argc(clo) == 5 ? clo->fn.fn5(clo->env[0], arg0, arg1, arg2, arg3):\
