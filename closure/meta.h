@@ -101,8 +101,31 @@ once
 
 
 
-#define SUBTR(x, y) 
-//#define SUBTR(16_1()
+#define SUBTR(x, y) CAT(SUBTR_, x, _, y)
+#define SUBTR_16_1 15
+#define SUBTR_16_2 14
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
+#define SUBTR_16_3 13
 
 /*
  * A usable syntax for function pointers up to 16 arguments. The return

@@ -220,19 +220,19 @@ clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
 // use repeater macros to generate a switch dispatching on the number of expected arguments
 #define CLO_APPLY_0(out, clo) assert(clo_argr(clo) == 0);\
 switch(clo_argc(clo)) {\
-EVAL(REPEAT(CLO_ARG_MAX, CLO_CASE,  out, clo))\
+EVAL(REPEAT(16, CLO_CASE,  out, clo))\
 CLO_ARG_ERR(clo)\
 }
 
 #define CLO_APPLY_1(out, clo, arg0) assert(clo_argr(clo) == 1);\
 switch(clo_argc(clo)) {\
-EVAL(REPEAT(CLO_ARG_MAX, CLO_CASE, out, clo))\
+EVAL(REPEAT(16, CLO_CASE, out, clo))\
 CLO_ARG_ERR(clo)\
 }
 
 #define CLO_APPLY_2(out, clo, arg0, arg1) assert(clo_argr(clo) == 2);\
 switch(clo_argc(clo)) {\
-EVAL(REPEAT(CLO_ARG_MAX, CLO_CASE, out, clo, arg0, arg1))\
+EVAL(REPEAT(16, CLO_CASE, out, clo, arg0, arg1))\
 CLO_ARG_ERR(clo)\
 }
 
