@@ -203,36 +203,37 @@ clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
  * Apply a curried closure. The first argument must be the closure parameter.
  * NOTE: currently incomplete, as I need a switch dispatching on the total number of args.
  */
-#define clo_apply(out, ...) VA_ARG_CAT(CLO_APPLY_, VA_ARGC(VA_ARG_SKIP_1(__VA_ARGS__)))(out, __VA_ARGS__)
+#define clo_apply(out, ...) CAT(CLO_APPLY_, VA_ARGC(VA_ARG_SKIP_1(__VA_ARGS__)))(out, __VA_ARGS__)
 
 
 /*
- * Applying closures.
+ * Closure application overloads.
  */
-#define CLO_CASE(i, out, clo) case INC(i): out = CAT(clo->fn.fn, INC(i))(clo->env[0] REPEAT(i, CLO_ENV, out, clo)); break;
-#define CLO_ENV(i, out, clo) ,clo->env[i]
-#define CLO_ERR(clo) default:\
-	fprintf(stderr, "%s line %d: closures can only accept 16 arguments, but given: %d", __FILE__, __LINE__, clo_argc(clo));\
+//#define CLO_CASE(i, out, ...) case i: out = CAT(VA_ARG_0(__VA_ARGS__)->fn.fn, i)(REPEAT(i, CLO_ENV, out, VA_ARG_0(__VA_ARGS__))); break;
+#define CLO_CASE(i, out, clo, ...) case i: out = CAT(clo->fn.fn, i)(REPEAT(i, CLO_ENV, out, clo)); break;
+#define CLO_ENV(i, out, clo) COMMA_IF(i) clo->env[i]
+#define CLO_ARG(i, arg) ,arg ## i
+#define CLO_ARG_ERR(clo) default:\
+	fprintf(stderr, "%s line %d: closures can only accept 16 arguments, but found: %d", __FILE__, __LINE__, clo_argc(clo));\
 	exit(1);
 
+// use repeater macros to generate a switch dispatching on the number of expected arguments
 #define CLO_APPLY_0(out, clo) assert(clo_argr(clo) == 0);\
 switch(clo_argc(clo)) {\
-case 0: out = clo->fn.fn0(); break;\
-EVAL(REPEAT(16, CLO_CASE,  out, clo))\
-CLO_ERR(clo)\
+EVAL(REPEAT(CLO_ARG_MAX, CLO_CASE,  out, clo))\
+CLO_ARG_ERR(clo)\
 }
 
 #define CLO_APPLY_1(out, clo, arg0) assert(clo_argr(clo) == 1);\
 switch(clo_argc(clo)) {\
-case 0: out = clo->fn.fn0(); break;\
-EVAL(REPEAT(16, CLO_CASE, out, clo))\
-CLO_ERR(clo)\
+EVAL(REPEAT(CLO_ARG_MAX, CLO_CASE, out, clo))\
+CLO_ARG_ERR(clo)\
 }
 
 #define CLO_APPLY_2(out, clo, arg0, arg1) assert(clo_argr(clo) == 2);\
 switch(clo_argc(clo)) {\
-EVAL(REPEAT(16, CLO_CASE, out, clo))\
-CLO_ERR(clo)\
+EVAL(REPEAT(CLO_ARG_MAX, CLO_CASE, out, clo, arg0, arg1))\
+CLO_ARG_ERR(clo)\
 }
 
 #define clo_apply1(clo, arg0) (assert(clo_argr(clo) == 1),\

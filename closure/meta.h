@@ -1,4 +1,4 @@
-#pragma once
+once
 #ifndef __META_H__
 #define __META_H__
 
@@ -99,6 +99,10 @@
 #define VA_ARG_FMT_14(_0, ...) _0,VA_ARG_SKIP_1(__VA_ARGS__)
 #define VA_ARG_FMT_15(_0, ...) _0,VA_ARG_SKIP_1(__VA_ARGS__)
 
+
+
+#define SUBTR(x, y) 
+//#define SUBTR(16_1()
 
 /*
  * A usable syntax for function pointers up to 16 arguments. The return
