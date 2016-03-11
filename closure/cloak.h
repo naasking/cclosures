@@ -96,6 +96,7 @@
 #define EVAL4(...) EVAL5(EVAL5(EVAL5(__VA_ARGS__)))
 #define EVAL5(...) __VA_ARGS__
 
+
 #define REPEAT(count, macro, ...) \
     WHEN(count) \
     ( \
@@ -109,6 +110,20 @@
         ) \
     )
 #define REPEAT_INDIRECT() REPEAT
+
+#define REPEAT2(count, count2, macro, ...) \
+    WHEN(count) \
+    ( \
+        OBSTRUCT(REPEAT2_INDIRECT) () \
+        ( \
+            DEC(count), DEC(count2), macro, __VA_ARGS__ \
+        ) \
+        OBSTRUCT(macro) \
+        ( \
+            DEC(count), DEC(count2), __VA_ARGS__ \
+        ) \
+    )
+#define REPEAT2_INDIRECT() REPEAT2
 
 #define WHILE(pred, op, ...) \
     IF(pred(__VA_ARGS__)) \

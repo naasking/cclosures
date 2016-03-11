@@ -14,6 +14,8 @@ int main(int argc, char** argv) {
 	val_t x = clo_call(c);
 	printf("x = %u\n", x.si);
 
+	//int f = EVAL(ADD(3, 2));
+
 	clo_t c2 = clo_lift((fn_t) { .fn1 = foo }, 1, 0);
 	clo_apply(x, c2, arg, x, x);
 	printf("x = %u\n", x.si);

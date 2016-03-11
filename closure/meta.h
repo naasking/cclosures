@@ -101,31 +101,26 @@ once
 
 #define VA_EMPTY
 
-#define SUBTR(x, y) CAT(SUBTR_, x, _, y)
-#define SUBTR_16_1 15
-#define SUBTR_16_2 14
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
-#define SUBTR_16_3 13
+#define SUBTR(x, y) WHILE(NOT_EQUAL, SUBTR, DEC(x), y)
+#define ADD(x, y) WHILE(NOT_EQUAL, ADD, x, y)
+
+//IF(NOT_EQUAL(x, y))
+//(
+//	OBSTRUCT(WHILE_INDIRECT) ()
+//	(
+//		NOT_EQUAL, ADD, ADD(x, y)
+//	),
+//	x, y
+//)
+
+//IF(NOT_EQUAL(x, y))
+//(
+//	OBSTRUCT(WHILE_INDIRECT) ()
+//	(
+//		NOT_EQUAL, ADD, ADD(x, y)
+//	),
+//	x, y
+//)
 
 /*
  * A usable syntax for function pointers up to 16 arguments. The return
