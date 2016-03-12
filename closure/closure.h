@@ -200,7 +200,8 @@ clo_t clo_init(clo_t c, fn_t fn, unsigned argc, unsigned argn, ...);
 #define clo_call(...) clo_invoke(VA_ARG_0(__VA_ARGS__), VA_ARG_FMT(VA_ARG_0(__VA_ARGS__)->env[0], __VA_ARGS__))
 
 /*
- * Apply a curried closure. The first argument must be the closure parameter.
+ * Apply a curried closure. The first argument is a local that will be assigned the return value,
+ * the second argument must be the closure parameter.
  * NOTE: currently incomplete, as I need a switch dispatching on the total number of args.
  */
 #define clo_apply(out, ...) CAT(CLO_APPLY_, VA_ARGC(VA_ARG_SKIP_1(__VA_ARGS__)))(out, __VA_ARGS__)
