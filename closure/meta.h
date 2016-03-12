@@ -131,15 +131,9 @@
  *
  * NOTE: requires support for anonymous structs (typically C11).
  */
-//#define fn(...) struct {\
-// VA_ARG_LAST(__VA_ARGS__) (*call)(\
-//   VA_ARG_TAKE(VA_ARGC(...),\
-//		 VA_ARG(0)  arg0,  VA_ARG(1)  arg1,  VA_ARG(2)  arg2,  VA_ARG(3)  arg3,\
-//         VA_ARG(4)  arg4,  VA_ARG(5)  arg5,  VA_ARG(6)  arg6,  VA_ARG(7)  arg7,\
-//         VA_ARG(8)  arg8,  VA_ARG(9)  arg9,  VA_ARG(10) arg10, VA_ARG(11) arg11,\
-//         VA_ARG(12) arg12, VA_ARG(13) arg13, VA_ARG(14) arg14, VA_ARG(15) arg5));\
-//}
-//
-//#define fn_new(f) { .call = f }
+#define fn(...) struct {\
+    VA_ARG_LAST(__VA_ARGS__) (*call)(VA_ARG_TAKE(DEC(VA_ARGC(__VA_ARGS__)),__VA_ARGS__)); \
+}
+#define fn_new(f) { .call = f }
 
 #endif /*__META_H__*/
