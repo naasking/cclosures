@@ -101,27 +101,6 @@
 
 #define VA_EMPTY
 
-#define SUBTR(x, y) WHILE(NOT_EQUAL, SUBTR, DEC(x), y)
-#define ADD(x, y) WHILE(NOT_EQUAL, ADD, x, y)
-
-//IF(NOT_EQUAL(x, y))
-//(
-//	OBSTRUCT(WHILE_INDIRECT) ()
-//	(
-//		NOT_EQUAL, ADD, ADD(x, y)
-//	),
-//	x, y
-//)
-
-//IF(NOT_EQUAL(x, y))
-//(
-//	OBSTRUCT(WHILE_INDIRECT) ()
-//	(
-//		NOT_EQUAL, ADD, ADD(x, y)
-//	),
-//	x, y
-//)
-
 /*
  * A usable syntax for function pointers up to 16 arguments. The return
  * value shows up last like in lambda function types:
@@ -135,5 +114,25 @@
     VA_ARG_LAST(__VA_ARGS__) (*call)(VA_ARG_TAKE(DEC(VA_ARGC(__VA_ARGS__)),__VA_ARGS__)); \
 }
 #define fn_new(f) { .call = f }
+
+// clever bit of code for static_assert by Paul Eggert:
+// https://sourceware.org/ml/libc-alpha/2015-02/msg00102.html
+#if (!defined _Static_assert \
+     && (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0) < 201112 \
+     && (defined __STRICT_ANSI__))
+#define _Static_assert(expr, diagnostic) \
+    extern int (*__Static_assert_function (void)) \
+      [!!sizeof (struct { int __error_if_negative: (expr) ? 2 : -1; })]
+#endif
+
+#ifndef static_assert
+#define static_assert(e,d) _Static_assert(e,d)
+#endif
+
+#if !defined(typeof) && defined(__typeof__)
+#define typeof(e) __typeof__(e)
+#elif !defined(typeof) && defined(decltype)
+#define typeof(e) decltype(e)
+#endif
 
 #endif /*__META_H__*/

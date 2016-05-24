@@ -155,5 +155,6 @@ IIF(BITAND(IS_COMPARABLE(x))(IS_COMPARABLE(y)) ) \
 #define COMMA() ,
 
 #define COMMA_IF(n) IF(n)(COMMA, EAT)()
+#define TOK_IF(n, tok) IF(n)(tok, EAT)()
 
 #endif
