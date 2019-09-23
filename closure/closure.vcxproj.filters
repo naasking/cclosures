@@ -18,18 +18,12 @@
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="closure.c">
+    <ClCompile Include="fn.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="closure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="meta.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cloak.h">
+    <ClInclude Include="fn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
