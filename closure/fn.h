@@ -381,19 +381,58 @@ inline val fn_call7(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 			return x;
 		} else {
 			// over-application: apply as many arguments as possible
+			//FIXME: tmp closure needs to be cleaned up?
+			val tmp, x;
 			switch (f->argr) {
-			case 0: return fn_call7(fn_call0(f).fn, arg0, arg1, arg2, arg3, arg4, arg5, arg6);
-			case 1: return fn_call6(fn_call1(f, arg0).fn, arg1, arg2, arg3, arg4, arg5, arg6);
-			case 2: return fn_call5(fn_call2(f, arg0, arg1).fn, arg2, arg3, arg4, arg5, arg6);
-			case 3: return fn_call4(fn_call3(f, arg0, arg1, arg2).fn, arg3, arg4, arg5, arg6);
-			case 4: return fn_call3(fn_call3(f, arg0, arg1, arg2, arg3).fn, arg4, arg5, arg6);
-			case 5: return fn_call2(fn_call3(f, arg0, arg1, arg2, arg3, arg4).fn, arg5, arg6);
-			case 6: return fn_call1(fn_call3(f, arg0, arg1, arg2, arg3, arg4, arg5).fn, arg6);
+			case 0: x = fn_call7((tmp = fn_call0(f)).fn, arg0, arg1, arg2, arg3, arg4, arg5, arg6); break;
+			case 1: x = fn_call6((tmp = fn_call1(f, arg0)).fn, arg1, arg2, arg3, arg4, arg5, arg6); break;
+			case 2: x = fn_call5((tmp = fn_call2(f, arg0, arg1)).fn, arg2, arg3, arg4, arg5, arg6); break;
+			case 3: x = fn_call4((tmp = fn_call3(f, arg0, arg1, arg2)).fn, arg3, arg4, arg5, arg6); break;
+			case 4: x = fn_call3((tmp = fn_call4(f, arg0, arg1, arg2, arg3)).fn, arg4, arg5, arg6); break;
+			case 5: x = fn_call2((tmp = fn_call5(f, arg0, arg1, arg2, arg3, arg4)).fn, arg5, arg6); break;
+			case 6: x = fn_call1((tmp = fn_call6(f, arg0, arg1, arg2, arg3, arg4, arg5)).fn, arg6); break;
 			default:
 				fprintf(stderr, "fn_call2: required %d args but called with 2\r\n", f->argr);
 				abort();
 			}
+			free(tmp.fn);
+			return x;
 		}
+	}
+}
+
+inline val fn_call8(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7) {
+	val *env = &f->env;
+	if ((f->argr - 8) << 3 | f->argp == 0) {
+		return f->f.fn7(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+	} else if (f->argr > 2) {
+		val x = fn_papp(f, f->argp + 1);
+		(&x.fn->env)[f->argp] = arg0;
+		(&x.fn->env)[f->argp + 1] = arg1;
+		(&x.fn->env)[f->argp + 2] = arg2;
+		(&x.fn->env)[f->argp + 3] = arg3;
+		(&x.fn->env)[f->argp + 4] = arg4;
+		(&x.fn->env)[f->argp + 4] = arg5;
+		return x;
+	} else {
+		// over-application: apply as many arguments as possible
+		//FIXME: tmp closure needs to be cleaned up?
+		val tmp, x;
+		switch (f->argr) {
+		case 0: x = fn_call8((tmp = fn_call0(f)).fn, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7); break;
+		case 1: x = fn_call7((tmp = fn_call1(f, arg0)).fn, arg1, arg2, arg3, arg4, arg5, arg6, arg7); break;
+		case 2: x = fn_call6((tmp = fn_call2(f, arg0, arg1)).fn, arg2, arg3, arg4, arg5, arg6, arg7); break;
+		case 3: x = fn_call5((tmp = fn_call3(f, arg0, arg1, arg2)).fn, arg3, arg4, arg5, arg6, arg7); break;
+		case 4: x = fn_call4((tmp = fn_call4(f, arg0, arg1, arg2, arg3)).fn, arg4, arg5, arg6, arg7); break;
+		case 5: x = fn_call3((tmp = fn_call5(f, arg0, arg1, arg2, arg3, arg4)).fn, arg5, arg6, arg7); break;
+		case 6: x = fn_call2((tmp = fn_call6(f, arg0, arg1, arg2, arg3, arg4, arg5)).fn, arg6, arg7); break;
+		case 7: x = fn_call1((tmp = fn_call7(f, arg0, arg1, arg2, arg3, arg4, arg5, arg6)).fn, arg7); break;
+		default:
+			fprintf(stderr, "fn_call2: required %d args but called with 2\r\n", f->argr);
+			abort();
+		}
+		free(tmp.fn);
+		return x;
 	}
 }
 
