@@ -161,7 +161,7 @@ extern val fn_papp(fn* f, unsigned argn);
 
 inline val fn_call0(fn* f) {
 	val *env = &f->env;
-	switch (f->argr << 3 | f->argp) {
+	switch ((f->argr << 3) | f->argp) {
 	case 0: return f->f.fn0();
 	case 1: return f->f.fn1(env[0]);
 	case 2: return f->f.fn2(env[0], env[1]);
@@ -170,7 +170,7 @@ inline val fn_call0(fn* f) {
 	case 5: return f->f.fn5(env[0], env[1], env[2], env[3], env[4]);
 	case 6: return f->f.fn6(env[0], env[1], env[2], env[3], env[4], env[5]);
 	case 7: return f->f.fn7(env[0], env[1], env[2], env[3], env[4], env[5], env[6]);
-	case 8: return f->f.fn7(env[0], env[1], env[2], env[3], env[4], env[5], env[6], env[7]);
+	case 8: return f->f.fn8(env[0], env[1], env[2], env[3], env[4], env[5], env[6], env[7]);
 	default:
 		fprintf(stderr, "fn_call0: required %d args but called with 0\r\n", f->argr);
 		abort();
@@ -179,7 +179,7 @@ inline val fn_call0(fn* f) {
 
 inline val fn_call1(fn* f, val arg0) {
 	val *env = &f->env;
-	switch ((f->argr - 1) << 3 | f->argp) {
+	switch (((f->argr - 1) << 3) | f->argp) {
 	case 0: return f->f.fn1(arg0);
 	case 1: return f->f.fn2(env[0], arg0);
 	case 2: return f->f.fn3(env[0], env[1], arg0);
@@ -210,15 +210,14 @@ inline val fn_call1(fn* f, val arg0) {
 
 inline val fn_call2(fn* f, val arg0, val arg1) {
 	val *env = &f->env;
-	switch ((f->argr - 2) << 3 | f->argp) {
+	switch (((f->argr - 2) << 3) | f->argp) {
 	case 0: return f->f.fn2(arg0, arg1);
 	case 1: return f->f.fn3(env[0], arg0, arg1);
 	case 2: return f->f.fn4(env[0], env[1], arg0, arg1);
 	case 3: return f->f.fn5(env[0], env[1], env[2], arg0, arg1);
 	case 4: return f->f.fn6(env[0], env[1], env[2], env[3], arg0, arg1);
 	case 5: return f->f.fn7(env[0], env[1], env[2], env[3], env[4], arg0, arg1);
-	case 6: return f->f.fn7(env[0], env[1], env[2], env[3], env[4], env[5], arg0, arg1);
-	case 7: return f->f.fn8(env[0], env[1], env[2], env[3], env[4], env[5], env[6], arg0, arg1);
+	case 6: return f->f.fn8(env[0], env[1], env[2], env[3], env[4], env[5], arg0, arg1);
 	default:
 		if (f->argr > 2) {
 			val x = fn_papp(f, f->argp + 1);
@@ -240,7 +239,7 @@ inline val fn_call2(fn* f, val arg0, val arg1) {
 
 inline val fn_call3(fn* f, val arg0, val arg1, val arg2) {
 	val *env = &f->env;
-	switch ((f->argr - 3) << 3 | f->argp) {
+	switch (((f->argr - 3) << 3) | f->argp) {
 	case 0: return f->f.fn3(arg0, arg1, arg2);
 	case 1: return f->f.fn4(env[0], arg0, arg1, arg2);
 	case 2: return f->f.fn5(env[0], env[1], arg0, arg1, arg2);
@@ -270,7 +269,7 @@ inline val fn_call3(fn* f, val arg0, val arg1, val arg2) {
 
 inline val fn_call4(fn* f, val arg0, val arg1, val arg2, val arg3) {
 	val *env = &f->env;
-	switch ((f->argr - 4) << 3 | f->argp) {
+	switch (((f->argr - 4) << 3) | f->argp) {
 	case 0: return f->f.fn4(arg0, arg1, arg2, arg3);
 	case 1: return f->f.fn5(env[0], arg0, arg1, arg2, arg3);
 	case 2: return f->f.fn6(env[0], env[1], arg0, arg1, arg2, arg3);
@@ -301,7 +300,7 @@ inline val fn_call4(fn* f, val arg0, val arg1, val arg2, val arg3) {
 
 inline val fn_call5(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
 	val *env = &f->env;
-	switch ((f->argr - 5) << 3 | f->argp) {
+	switch (((f->argr - 5) << 3) | f->argp) {
 	case 0: return f->f.fn5(arg0, arg1, arg2, arg3, arg4);
 	case 1: return f->f.fn6(env[0], arg0, arg1, arg2, arg3, arg4);
 	case 2: return f->f.fn7(env[0], env[1], arg0, arg1, arg2, arg3, arg4);
@@ -333,7 +332,7 @@ inline val fn_call5(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
 
 inline val fn_call6(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5) {
 	val *env = &f->env;
-	switch ((f->argr - 6) << 3 | f->argp) {
+	switch (((f->argr - 6) << 3) | f->argp) {
 	case 0: return f->f.fn6(arg0, arg1, arg2, arg3, arg4, arg5);
 	case 1: return f->f.fn7(env[0], arg0, arg1, arg2, arg3, arg4, arg5);
 	case 2: return f->f.fn8(env[0], env[1], arg0, arg1, arg2, arg3, arg4, arg5);
@@ -366,9 +365,9 @@ inline val fn_call6(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 
 inline val fn_call7(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6) {
 	val *env = &f->env;
-	switch ((f->argr - 7) << 3 | f->argp) {
-	case 0: return f->f.fn6(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
-	case 1: return f->f.fn7(env[0], arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+	switch (((f->argr - 7) << 3) | f->argp) {
+	case 0: return f->f.fn7(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
+	case 1: return f->f.fn8(env[0], arg0, arg1, arg2, arg3, arg4, arg5, arg6);
 	default:
 		if (f->argr > 2) {
 			val x = fn_papp(f, f->argp + 1);
@@ -402,9 +401,9 @@ inline val fn_call7(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 }
 
 inline val fn_call8(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7) {
-	val *env = &f->env;
-	if ((f->argr - 8) << 3 | f->argp == 0) {
-		return f->f.fn7(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+	//val *env = &f->env;
+	if (!((f->argr - 8) << 3) && f->argp == 0) {
+		return f->f.fn8(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
 	} else if (f->argr > 2) {
 		val x = fn_papp(f, f->argp + 1);
 		(&x.fn->env)[f->argp] = arg0;

@@ -30,10 +30,10 @@ fn* fn_init(fn* c, fp f, unsigned argr, unsigned argn, ...) {
 }
 
 val fn_papp(fn* f, unsigned argn) {
-	if (argn + f->argp > FN_ARGS_MAX) {
+	/*if (argn + f->argp > FN_ARGS_MAX) {
 		errno = E2BIG;
 		return NULL;
-	}
+	}*/
 	fn* x = (fn*)malloc(sizeof(fn) + (argn + f->argp - 1) * sizeof(val));
 	val *fenv = &f->env, *xenv = &x->env;
 	x->argr = f->argr - argn;
