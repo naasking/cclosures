@@ -1,5 +1,5 @@
-#ifndef FN_H
-#define FN_H
+#ifndef CFN_H
+#define CFN_H
 
 /**
  * = Curried Functions for C =
@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#define VAL_EXTRA struct fn *fn;
 #include "val.h"
 
 /*

@@ -7,7 +7,7 @@
 #include <stdarg.h>
 #include <errno.h>
 
-#include "fn.h"
+#include "cfn.h"
 
 fn* fn_init(fn* c, fp f, unsigned argr, unsigned argn, ...) {
 	if (argr + argn > FN_ARGS_MAX) {

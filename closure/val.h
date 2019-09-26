@@ -8,19 +8,10 @@
 #endif
 
 /**
- * = Closures for C =
+ * = Universal Value Type =
  *
- * This implements eval/apply style closures for C based around a universal value type 'val',
- * which is currently defined to be machine word-sized.
+ * This declares a universal type that is processed by all function types.
  */
-
- /* alloca.h is not provided by MSVC */
- //#ifdef _MSC_VER
- //#include <malloc.h>
- //#define alloca _alloca
- //#else
- //#include <alloca.h>
- //#endif
 
  /* native machine word type */
 typedef uintptr_t word;
@@ -84,8 +75,9 @@ typedef union val {
 	int64_t *a_i64;
 	ptrdiff_t pdiff;
 	word *a_w;
-	struct fn *fn;
+	VAL_EXTRA
 } val;
 
+#undef VAL_EXTRA
 
 #endif

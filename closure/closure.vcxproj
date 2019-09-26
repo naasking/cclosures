@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="fn.h" />
+    <ClInclude Include="cfn.h" />
     <ClInclude Include="val.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="fn.c" />
+    <ClCompile Include="cfn.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
