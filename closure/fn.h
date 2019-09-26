@@ -107,14 +107,6 @@ typedef union {
 	val(*fn6)(val arg0, val arg1, val arg2, val arg3, val arg4, val arg5);
 	val(*fn7)(val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6);
 	val(*fn8)(val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7);
-	//val(*fn9)(val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7, val arg8);
-	//val(*fn10)(val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7, val arg8, val arg9);
-	//val(*fn11)(val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7, val arg8, val arg9, val arg10);
-	//val(*fn12)(val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7, val arg8, val arg9, val arg10, val arg11);
-	//val(*fn13)(val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7, val arg8, val arg9, val arg10, val arg11, val arg12);
-	//val(*fn14)(val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7, val arg8, val arg9, val arg10, val arg11, val arg12, val arg13);
-	//val(*fn15)(val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7, val arg8, val arg9, val arg10, val arg11, val arg12, val arg13, val arg14);
-	//val(*fn16)(val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7, val arg8, val arg9, val arg10, val arg11, val arg12, val arg13, val arg14, val arg15);
 } fp;
 
 /*
@@ -134,20 +126,13 @@ typedef struct fn {
  */
 #define FN_ARGS_MAX 8
 
-///*
-// * The number of function arguments.
-// */
-//#define clo_argc(c) (c)->argr+(c)->argp
-//
-///*
-// * The number of remaining arguments to apply.
-// */
-//#define clo_argr(c) (c)->argr
-//
-///*
-// * The number of applied arguments.
-// */
-//#define clo_arga(c) (c)->argp
+#define fncat(x,y) x##y
+
+#ifndef fn_fail
+#define fn_fail(argn) \
+fprintf(stderr, "%s: required %d args but called with %d\r\n", __func__, f->argr, argn); \
+abort()
+#endif
 
 /*
  * Initialize an existing closure record with the given arguments.
@@ -172,8 +157,7 @@ inline val fn_call0(fn* f) {
 	case 7: return f->f.fn7(env[0], env[1], env[2], env[3], env[4], env[5], env[6]);
 	case 8: return f->f.fn8(env[0], env[1], env[2], env[3], env[4], env[5], env[6], env[7]);
 	default:
-		fprintf(stderr, "fn_call0: required %d args but called with 0\r\n", f->argr);
-		abort();
+		fn_fail(0);
 	}
 }
 
@@ -202,8 +186,7 @@ inline val fn_call1(fn* f, val arg0) {
 			// over-application: apply as many arguments as possible
 			return fn_call1(fn_call0(f).fn, arg0);
 		} else {
-			fprintf(stderr, "fn_call1: required %d args but called with 1\r\n", f->argr);
-			abort();
+			fn_fail(1);
 		}
 	}
 }
@@ -230,8 +213,7 @@ inline val fn_call2(fn* f, val arg0, val arg1) {
 			case 0: return fn_call2(fn_call0(f).fn, arg0, arg1);
 			case 1: return fn_call1(fn_call1(f, arg0).fn, arg1);
 			default:
-				fprintf(stderr, "fn_call2: required %d args but called with 2\r\n", f->argr);
-				abort();
+				fn_fail(2);
 			}
 		}
 	}
@@ -247,7 +229,7 @@ inline val fn_call3(fn* f, val arg0, val arg1, val arg2) {
 	case 4: return f->f.fn7(env[0], env[1], env[2], env[3], arg0, arg1, arg2);
 	case 5: return f->f.fn8(env[0], env[1], env[2], env[3], env[4], arg0, arg1, arg2);
 	default:
-		if (f->argr > 2) {
+		if (f->argr > 3) {
 			val x = fn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			(&x.fn->env)[f->argp + 1] = arg1;
@@ -260,8 +242,7 @@ inline val fn_call3(fn* f, val arg0, val arg1, val arg2) {
 			case 1: return fn_call2(fn_call1(f, arg0).fn, arg1, arg2);
 			case 2: return fn_call1(fn_call2(f, arg0, arg1).fn, arg2);
 			default:
-				fprintf(stderr, "fn_call2: required %d args but called with 2\r\n", f->argr);
-				abort();
+				fn_fail(3);
 			}
 		}
 	}
@@ -276,7 +257,7 @@ inline val fn_call4(fn* f, val arg0, val arg1, val arg2, val arg3) {
 	case 3: return f->f.fn7(env[0], env[1], env[2], arg0, arg1, arg2, arg3);
 	case 4: return f->f.fn8(env[0], env[1], env[2], env[3], arg0, arg1, arg2, arg3);
 	default:
-		if (f->argr > 2) {
+		if (f->argr > 4) {
 			val x = fn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			(&x.fn->env)[f->argp + 1] = arg1;
@@ -291,8 +272,7 @@ inline val fn_call4(fn* f, val arg0, val arg1, val arg2, val arg3) {
 			case 2: return fn_call2(fn_call2(f, arg0, arg1).fn, arg2, arg3);
 			case 3: return fn_call1(fn_call3(f, arg0, arg1, arg2).fn, arg3);
 			default:
-				fprintf(stderr, "fn_call2: required %d args but called with 2\r\n", f->argr);
-				abort();
+				fn_fail(4);
 			}
 		}
 	}
@@ -306,7 +286,7 @@ inline val fn_call5(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
 	case 2: return f->f.fn7(env[0], env[1], arg0, arg1, arg2, arg3, arg4);
 	case 3: return f->f.fn8(env[0], env[1], env[2], arg0, arg1, arg2, arg3, arg4);
 	default:
-		if (f->argr > 2) {
+		if (f->argr > 5) {
 			val x = fn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			(&x.fn->env)[f->argp + 1] = arg1;
@@ -323,8 +303,7 @@ inline val fn_call5(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
 			case 3: return fn_call2(fn_call3(f, arg0, arg1, arg2).fn, arg3, arg4);
 			case 4: return fn_call1(fn_call4(f, arg0, arg1, arg2, arg3).fn, arg4);
 			default:
-				fprintf(stderr, "fn_call2: required %d args but called with 2\r\n", f->argr);
-				abort();
+				fn_fail(5);
 			}
 		}
 	}
@@ -337,14 +316,14 @@ inline val fn_call6(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 	case 1: return f->f.fn7(env[0], arg0, arg1, arg2, arg3, arg4, arg5);
 	case 2: return f->f.fn8(env[0], env[1], arg0, arg1, arg2, arg3, arg4, arg5);
 	default:
-		if (f->argr > 2) {
+		if (f->argr > 6) {
 			val x = fn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			(&x.fn->env)[f->argp + 1] = arg1;
 			(&x.fn->env)[f->argp + 2] = arg2;
 			(&x.fn->env)[f->argp + 3] = arg3;
 			(&x.fn->env)[f->argp + 4] = arg4;
-			(&x.fn->env)[f->argp + 4] = arg5;
+			(&x.fn->env)[f->argp + 5] = arg5;
 			return x;
 		} else {
 			// over-application: apply as many arguments as possible
@@ -356,8 +335,7 @@ inline val fn_call6(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 			case 4: return fn_call2(fn_call4(f, arg0, arg1, arg2, arg3).fn, arg4, arg5);
 			case 5: return fn_call1(fn_call5(f, arg0, arg1, arg2, arg3, arg4).fn, arg5);
 			default:
-				fprintf(stderr, "fn_call2: required %d args but called with 2\r\n", f->argr);
-				abort();
+				fn_fail(6);
 			}
 		}
 	}
@@ -369,14 +347,16 @@ inline val fn_call7(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 	case 0: return f->f.fn7(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
 	case 1: return f->f.fn8(env[0], arg0, arg1, arg2, arg3, arg4, arg5, arg6);
 	default:
-		if (f->argr > 2) {
+		//FIXME: 
+		if (f->argr > 7) {
 			val x = fn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			(&x.fn->env)[f->argp + 1] = arg1;
 			(&x.fn->env)[f->argp + 2] = arg2;
 			(&x.fn->env)[f->argp + 3] = arg3;
 			(&x.fn->env)[f->argp + 4] = arg4;
-			(&x.fn->env)[f->argp + 4] = arg5;
+			(&x.fn->env)[f->argp + 5] = arg5;
+			(&x.fn->env)[f->argp + 6] = arg6;
 			return x;
 		} else {
 			// over-application: apply as many arguments as possible
@@ -391,8 +371,7 @@ inline val fn_call7(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 			case 5: x = fn_call2((tmp = fn_call5(f, arg0, arg1, arg2, arg3, arg4)).fn, arg5, arg6); break;
 			case 6: x = fn_call1((tmp = fn_call6(f, arg0, arg1, arg2, arg3, arg4, arg5)).fn, arg6); break;
 			default:
-				fprintf(stderr, "fn_call2: required %d args but called with 2\r\n", f->argr);
-				abort();
+				fn_fail(7);
 			}
 			free(tmp.fn);
 			return x;
@@ -404,14 +383,16 @@ inline val fn_call8(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 	//val *env = &f->env;
 	if (!((f->argr - 8) << 3) && f->argp == 0) {
 		return f->f.fn8(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-	} else if (f->argr > 2) {
+	} else if (f->argr > 8) {
 		val x = fn_papp(f, f->argp + 1);
 		(&x.fn->env)[f->argp] = arg0;
 		(&x.fn->env)[f->argp + 1] = arg1;
 		(&x.fn->env)[f->argp + 2] = arg2;
 		(&x.fn->env)[f->argp + 3] = arg3;
 		(&x.fn->env)[f->argp + 4] = arg4;
-		(&x.fn->env)[f->argp + 4] = arg5;
+		(&x.fn->env)[f->argp + 5] = arg5;
+		(&x.fn->env)[f->argp + 6] = arg6;
+		(&x.fn->env)[f->argp + 7] = arg7;
 		return x;
 	} else {
 		// over-application: apply as many arguments as possible
@@ -427,8 +408,7 @@ inline val fn_call8(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 		case 6: x = fn_call2((tmp = fn_call6(f, arg0, arg1, arg2, arg3, arg4, arg5)).fn, arg6, arg7); break;
 		case 7: x = fn_call1((tmp = fn_call7(f, arg0, arg1, arg2, arg3, arg4, arg5, arg6)).fn, arg7); break;
 		default:
-			fprintf(stderr, "fn_call2: required %d args but called with 2\r\n", f->argr);
-			abort();
+			fn_fail(8);
 		}
 		free(tmp.fn);
 		return x;
