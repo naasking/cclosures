@@ -183,8 +183,7 @@ inline fn7* fn8_wrap1(fn8* f, val x0) {
 inline fn6* fn8_wrap2(fn8* f, val x0, val x1) {
 	fnx fn;
 	fn.fn8 = f;
-	fn = fnx_papp(fn, 2);
-	fn6* x = fn.fn6;
+	fn6* x = fnx_papp(fn, 2).fn6;
 	(&x->env)[0] = x0;
 	(&x->env)[1] = x1;
 	return x;
@@ -200,8 +199,7 @@ inline fn6* fn8_wrap2(fn8* f, val x0, val x1) {
 inline fn5* fn8_wrap3(fn8* f, val x0, val x1, val x2) {
 	fnx fn;
 	fn.fn8 = f;
-	fn = fnx_papp(fn, 3);
-	fn5* x = fn.fn5;
+	fn5* x = fnx_papp(fn, 3).fn5;
 	(&x->env)[0] = x0;
 	(&x->env)[1] = x1;
 	(&x->env)[2] = x2;
@@ -218,8 +216,7 @@ inline fn5* fn8_wrap3(fn8* f, val x0, val x1, val x2) {
 inline fn4* fn8_wrap4(fn8* f, val x0, val x1, val x2, val x3) {
 	fnx fn;
 	fn.fn8 = f;
-	fn = fnx_papp(fn, 4);
-	fn4* x = fn.fn4;
+	fn4* x = fnx_papp(fn, 4).fn4;
 	(&x->env)[0] = x0;
 	(&x->env)[1] = x1;
 	(&x->env)[2] = x2;
@@ -237,8 +234,7 @@ inline fn4* fn8_wrap4(fn8* f, val x0, val x1, val x2, val x3) {
 inline fn3* fn8_wrap5(fn8* f, val x0, val x1, val x2, val x3, val x4) {
 	fnx fn;
 	fn.fn8 = f;
-	fn = fnx_papp(fn, 5);
-	fn3* x = fn.fn3;
+	fn3* x = fnx_papp(fn, 5).fn3;
 	(&x->env)[0] = x0;
 	(&x->env)[1] = x1;
 	(&x->env)[2] = x2;
@@ -257,8 +253,7 @@ inline fn3* fn8_wrap5(fn8* f, val x0, val x1, val x2, val x3, val x4) {
 inline fn2* fn8_wrap6(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5) {
 	fnx fn;
 	fn.fn8 = f;
-	fn = fnx_papp(fn, 6);
-	fn2* x = fn.fn2;
+	fn2* x = fnx_papp(fn, 6).fn2;
 	(&x->env)[0] = x0;
 	(&x->env)[1] = x1;
 	(&x->env)[2] = x2;
@@ -278,8 +273,7 @@ inline fn2* fn8_wrap6(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5) {
 inline fn1* fn8_wrap7(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6) {
 	fnx fn;
 	fn.fn8 = f;
-	fn = fnx_papp(fn, 7); 
-	fn1* x = fn.fn1;
+	fn1* x = fnx_papp(fn, 7).fn1;
 	(&x->env)[0] = x0;
 	(&x->env)[1] = x1;
 	(&x->env)[2] = x2;
@@ -300,8 +294,7 @@ inline fn1* fn8_wrap7(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5, va
 inline fn0* fn8_wrap8(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6, val x7) {
 	fnx fn;
 	fn.fn8 = f;
-	fn = fnx_papp(fn, 8);
-	fn0* x = fn.fn0;
+	fn0* x = fnx_papp(fn, 8).fn0;
 	(&x->env)[0] = x0;
 	(&x->env)[1] = x1;
 	(&x->env)[2] = x2;
@@ -341,8 +334,7 @@ inline val fn7_call(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5, val 
 inline fn6* fn7_wrap1(fn7* f, val x0) {
 	fnx fn;
 	fn.fn7 = f;
-	fn = fnx_papp(fn, 1);
-	fn6* x = fn.fn6;
+	fn6* x = fnx_papp(fn, 1).fn6;
 	(&x->env)[f->envc] = x0;
 	return x;
 }
@@ -357,8 +349,7 @@ inline fn6* fn7_wrap1(fn7* f, val x0) {
 inline fn5* fn7_wrap2(fn7* f, val x0, val x1) {
 	fnx fn;
 	fn.fn7 = f;
-	fn = fnx_papp(fn, 2);
-	fn5* x = fn.fn5;
+	fn5* x = fnx_papp(fn, 2).fn5;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	return x;
@@ -374,8 +365,7 @@ inline fn5* fn7_wrap2(fn7* f, val x0, val x1) {
 inline fn4* fn7_wrap3(fn7* f, val x0, val x1, val x2) {
 	fnx fn;
 	fn.fn7 = f;
-	fn = fnx_papp(fn, 3);
-	fn4* x = fn.fn4;
+	fn4* x = fnx_papp(fn, 3).fn4;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -392,8 +382,7 @@ inline fn4* fn7_wrap3(fn7* f, val x0, val x1, val x2) {
 inline fn3* fn7_wrap4(fn7* f, val x0, val x1, val x2, val x3) {
 	fnx fn;
 	fn.fn7 = f;
-	fn = fnx_papp(fn, 4);
-	fn3* x = fn.fn3;
+	fn3* x = fnx_papp(fn, 4).fn3;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -411,8 +400,7 @@ inline fn3* fn7_wrap4(fn7* f, val x0, val x1, val x2, val x3) {
 inline fn2* fn7_wrap5(fn7* f, val x0, val x1, val x2, val x3, val x4) {
 	fnx fn;
 	fn.fn7 = f;
-	fn = fnx_papp(fn, 5);
-	fn2* x = fn.fn2;
+	fn2* x = fnx_papp(fn, 5).fn2;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -431,8 +419,7 @@ inline fn2* fn7_wrap5(fn7* f, val x0, val x1, val x2, val x3, val x4) {
 inline fn1* fn7_wrap6(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5) {
 	fnx fn;
 	fn.fn7 = f;
-	fn = fnx_papp(fn, 6);
-	fn1* x = fn.fn1;
+	fn1* x = fnx_papp(fn, 6).fn1;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -452,8 +439,7 @@ inline fn1* fn7_wrap6(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5) {
 inline fn0* fn7_wrap7(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6) {
 	fnx fn;
 	fn.fn7 = f;
-	fn = fnx_papp(fn, 7);
-	fn0* x = fn.fn0;
+	fn0* x = fnx_papp(fn, 7).fn0;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -492,8 +478,7 @@ inline val fn6_call(fn6* f, val x0, val x1, val x2, val x3, val x4, val x5) {
 inline fn5* fn6_wrap1(fn6* f, val x0) {
 	fnx fn;
 	fn.fn6 = f;
-	fn = fnx_papp(fn, 1);
-	fn5* x = fn.fn5;
+	fn5* x = fnx_papp(fn, 1).fn5;
 	(&x->env)[f->envc] = x0;
 	return x;
 }
@@ -508,8 +493,7 @@ inline fn5* fn6_wrap1(fn6* f, val x0) {
 inline fn4* fn6_wrap2(fn6* f, val x0, val x1) {
 	fnx fn;
 	fn.fn6 = f;
-	fn = fnx_papp(fn, 2);
-	fn4* x = fn.fn4;
+	fn4* x = fnx_papp(fn, 2).fn4;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	return x;
@@ -525,8 +509,7 @@ inline fn4* fn6_wrap2(fn6* f, val x0, val x1) {
 inline fn3* fn6_wrap3(fn6* f, val x0, val x1, val x2) {
 	fnx fn;
 	fn.fn6 = f;
-	fn = fnx_papp(fn, 3);
-	fn3* x = fn.fn3;
+	fn3* x = fnx_papp(fn, 3).fn3;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -543,8 +526,7 @@ inline fn3* fn6_wrap3(fn6* f, val x0, val x1, val x2) {
 inline fn2* fn6_wrap4(fn6* f, val x0, val x1, val x2, val x3) {
 	fnx fn;
 	fn.fn6 = f;
-	fn = fnx_papp(fn, 4);
-	fn2* x = fn.fn2;
+	fn2* x = fnx_papp(fn, 4).fn2;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -562,8 +544,7 @@ inline fn2* fn6_wrap4(fn6* f, val x0, val x1, val x2, val x3) {
 inline fn1* fn6_wrap5(fn6* f, val x0, val x1, val x2, val x3, val x4) {
 	fnx fn;
 	fn.fn6 = f;
-	fn = fnx_papp(fn, 5);
-	fn1* x = fn.fn1;
+	fn1* x = fnx_papp(fn, 5).fn1;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -582,8 +563,7 @@ inline fn1* fn6_wrap5(fn6* f, val x0, val x1, val x2, val x3, val x4) {
 inline fn0* fn6_wrap6(fn6* f, val x0, val x1, val x2, val x3, val x4, val x5) {
 	fnx fn;
 	fn.fn6 = f;
-	fn = fnx_papp(fn, 6);
-	fn0* x = fn.fn0;
+	fn0* x = fnx_papp(fn, 6).fn0;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -623,8 +603,7 @@ inline val fn5_call(fn5* f, val x0, val x1, val x2, val x3, val x4) {
 inline fn4* fn5_wrap1(fn5* f, val x0) {
 	fnx fn;
 	fn.fn5 = f;
-	fn = fnx_papp(fn, 1);
-	fn4* x = fn.fn4;
+	fn4* x = fnx_papp(fn, 1).fn4;
 	(&x->env)[f->envc] = x0;
 	return x;
 }
@@ -639,8 +618,7 @@ inline fn4* fn5_wrap1(fn5* f, val x0) {
 inline fn3* fn5_wrap2(fn5* f, val x0, val x1) {
 	fnx fn;
 	fn.fn5 = f;
-	fn = fnx_papp(fn, 2);
-	fn3* x = fn.fn3;
+	fn3* x = fnx_papp(fn, 2).fn3;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	return x;
@@ -656,8 +634,7 @@ inline fn3* fn5_wrap2(fn5* f, val x0, val x1) {
 inline fn2* fn5_wrap3(fn5* f, val x0, val x1, val x2) {
 	fnx fn;
 	fn.fn5 = f;
-	fn = fnx_papp(fn, 3);
-	fn2* x = fn.fn2;
+	fn2* x = fnx_papp(fn, 3).fn2;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -674,8 +651,7 @@ inline fn2* fn5_wrap3(fn5* f, val x0, val x1, val x2) {
 inline fn1* fn5_wrap4(fn5* f, val x0, val x1, val x2, val x3) {
 	fnx fn;
 	fn.fn5 = f;
-	fn = fnx_papp(fn, 4);
-	fn1* x = fn.fn1;
+	fn1* x = fnx_papp(fn, 4).fn1;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -693,8 +669,7 @@ inline fn1* fn5_wrap4(fn5* f, val x0, val x1, val x2, val x3) {
 inline fn0* fn5_wrap5(fn5* f, val x0, val x1, val x2, val x3, val x4) {
 	fnx fn;
 	fn.fn5 = f;
-	fn = fnx_papp(fn, 5);
-	fn0* x = fn.fn0;
+	fn0* x = fnx_papp(fn, 5).fn0;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -733,8 +708,7 @@ inline val fn4_call(fn4* f, val x0, val x1, val x2, val x3) {
 inline fn3* fn4_wrap1(fn4* f, val x0) {
 	fnx fn;
 	fn.fn4 = f;
-	fn = fnx_papp(fn, 1);
-	fn3* x = fn.fn3;
+	fn3* x = fnx_papp(fn, 1).fn3;
 	(&x->env)[f->envc] = x0;
 	return x;
 }
@@ -749,8 +723,7 @@ inline fn3* fn4_wrap1(fn4* f, val x0) {
 inline fn2* fn4_wrap2(fn4* f, val x0, val x1) {
 	fnx fn;
 	fn.fn4 = f;
-	fn = fnx_papp(fn, 2);
-	fn2* x = fn.fn2;
+	fn2* x = fnx_papp(fn, 2).fn2;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	return x;
@@ -766,8 +739,7 @@ inline fn2* fn4_wrap2(fn4* f, val x0, val x1) {
 inline fn1* fn4_wrap3(fn4* f, val x0, val x1, val x2) {
 	fnx fn;
 	fn.fn4 = f;
-	fn = fnx_papp(fn, 3);
-	fn1* x = fn.fn1;
+	fn1* x = fnx_papp(fn, 3).fn1;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -784,8 +756,7 @@ inline fn1* fn4_wrap3(fn4* f, val x0, val x1, val x2) {
 inline fn0* fn4_wrap4(fn4* f, val x0, val x1, val x2, val x3) {
 	fnx fn;
 	fn.fn4 = f;
-	fn = fnx_papp(fn, 4);
-	fn0* x = fn.fn0;
+	fn0* x = fnx_papp(fn, 4).fn0;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -824,8 +795,7 @@ inline val fn3_call(fn3* f, val x0, val x1, val x2) {
 inline fn2* fn3_wrap1(fn3* f, val x0) {
 	fnx fn;
 	fn.fn3 = f;
-	fn = fnx_papp(fn, 1);
-	fn2* x = fn.fn2;
+	fn2* x = fnx_papp(fn, 1).fn2;
 	(&x->env)[f->envc] = x0;
 	return x;
 }
@@ -840,8 +810,7 @@ inline fn2* fn3_wrap1(fn3* f, val x0) {
 inline fn1* fn3_wrap2(fn3* f, val x0, val x1) {
 	fnx fn;
 	fn.fn3 = f;
-	fn = fnx_papp(fn, 2);
-	fn1* x = fn.fn1;
+	fn1* x = fnx_papp(fn, 2).fn1;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	return x;
@@ -857,8 +826,7 @@ inline fn1* fn3_wrap2(fn3* f, val x0, val x1) {
 inline fn0* fn3_wrap3(fn3* f, val x0, val x1, val x2) {
 	fnx fn;
 	fn.fn3 = f;
-	fn = fnx_papp(fn, 3);
-	fn0* x = fn.fn0;
+	fn0* x = fnx_papp(fn, 3).fn0;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	(&x->env)[f->envc + 2] = x2;
@@ -898,8 +866,7 @@ inline val fn2_call(fn2* f, val x0, val x1) {
 inline fn2* fn2_wrap1(fn2* f, val x0) {
 	fnx fn;
 	fn.fn2 = f;
-	fn = fnx_papp(fn, 1);
-	fn2* x = fn.fn2;
+	fn2* x = fnx_papp(fn, 1).fn2;
 	(&x->env)[f->envc] = x0;
 	return x;
 }
@@ -914,8 +881,7 @@ inline fn2* fn2_wrap1(fn2* f, val x0) {
 inline fn1* fn2_wrap2(fn2* f, val x0, val x1) {
 	fnx fn;
 	fn.fn2 = f;
-	fn = fnx_papp(fn, 2);
-	fn1* x = fn.fn1;
+	fn1* x = fnx_papp(fn, 2).fn1;
 	(&x->env)[f->envc] = x0;
 	(&x->env)[f->envc + 1] = x1;
 	return x;
@@ -955,8 +921,7 @@ inline val fn1_call(fn1* f, val x0) {
 inline fn0* fn1_wrap1(fn1* f, val x0) {
 	fnx fn;
 	fn.fn1 = f;
-	fn = fnx_papp(fn, 1);
-	fn0* x = fn.fn0;
+	fn0* x = fnx_papp(fn, 1).fn0;
 	(&x->env)[f->envc] = x0;
 	return x;
 }
