@@ -1,98 +1,16 @@
 #ifndef FN_H
 #define FN_H
 
-#include <stdlib.h>
-#include <stdint.h>
-#include <assert.h>
-#include <limits.h>
-#include <stdarg.h>
-#include <errno.h>
-#include <stdio.h>
-
-#if defined(_WIN64) || defined(WIN64) || defined(__sparc64__) || defined(_M_X64) || defined(_M_AMD64) || defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || defined(__x86_64) || defined(__ppc64__) || defined(__PPC64__) || defined(__ppc64) || defined(__LP__) || defined(_LP64) || defined(_AMD64_) || defined(_____LP64_____) || defined(__LP64__)
-#define WD64BIT
-#endif
-
 /**
- * = Closures for C =
- * 
+ * = Curried Functions for C =
+ *
  * This implements eval/apply style closures for C based around a universal value type 'val',
  * which is currently defined to be machine word-sized.
  */
 
-/* alloca.h is not provided by MSVC */
-//#ifdef _MSC_VER
-//#include <malloc.h>
-//#define alloca _alloca
-//#else
-//#include <alloca.h>
-//#endif
-
-/* native machine word type */
-typedef uintptr_t word;
-
-/*
-* The universal representation for all values.
-*/
-typedef union val {
-	/* platform-specific types */
-	void *p;
-	signed   char sc;
-	unsigned char uc;
-	signed   short ss;
-	unsigned short us;
-	signed   int si;
-	unsigned int ui;
-	//signed   long long sl;	//FIXME: may be 64-bit
-	//unsigned long long ul;
-	word w;
-
-	/* fixed width types */
-	float f;
-	uint8_t u8;
-	uint16_t u16;
-	uint32_t u32;
-	int8_t i8;
-	int16_t i16;
-	int32_t i32;
-
-	/* 64-bit types are either inlined, or pointed to */
-#ifdef WD64BIT
-	double d;
-	uint64_t u64;
-	int64_t i64;
-#else
-	double *d;
-	uint64_t *u64;
-	int64_t *i64;
-#endif // WD64BIT
-
-	/* pointers/arrays of the primitive types */
-	union val *a;
-	float *a_f;
-	double *a_d;
-	void *a_p;
-	signed char *a_sc;
-	unsigned char *a_uc;
-	signed short *a_ss;
-	unsigned short *a_us;
-	signed int *a_si;
-	unsigned int *a_ui;
-	signed long *a_sl;
-	unsigned long *a_ul;
-	uint8_t *a_u8;
-	uint16_t *a_u16;
-	uint32_t *a_u32;
-	uint64_t *a_u64;
-	int8_t *a_i8;
-	int16_t *a_i16;
-	int32_t *a_i32;
-	int64_t *a_i64;
-	ptrdiff_t pdiff;
-	word *a_w;
-	struct fn *fn;
-	struct fn **a_fn;
-} val;
+#include <stdio.h>
+#include <stdlib.h>
+#include "val.h"
 
 /*
  * The type of all closures. The first arg is a structure pointer for multiargument functions.
@@ -126,8 +44,6 @@ typedef struct fn {
  */
 #define FN_ARGS_MAX 8
 
-#define fncat(x,y) x##y
-
 #ifndef fn_fail
 #define fn_fail(argn) \
 fprintf(stderr, "%s: required %d args but called with %d\r\n", __func__, f->argr, argn); \
@@ -140,8 +56,10 @@ abort()
  * ERROR: returns E2BIG if argc exceeds the CLO_ARGS_MAX.
  */
 extern fn* fn_init(fn* c, fp f, unsigned argc, unsigned argn, ...);
-//extern fn* fn_new(fp f, unsigned argc, unsigned argn, ...);
 
+/**
+ * Partially apply a function with the given number of new arguments.
+ */
 extern val fn_papp(fn* f, unsigned argn);
 
 inline val fn_call0(fn* f) {
@@ -175,10 +93,6 @@ inline val fn_call1(fn* f, val arg0) {
 	default:
 		if (f->argr > 1) {
 			// partial application: lift argX to env and return lambda
-			//if (7 < f->argp || f->argp < 1) {
-			//	fprintf(stderr, "fn_call1: required %d args but called with 1\r\n", f->argr);
-			//	abort();
-			//}
 			val x = fn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			return x;
