@@ -9,7 +9,7 @@
 
 #include "cfn.h"
 
-fn* fn_init(fn* c, fp f, unsigned argr, unsigned argn, ...) {
+cfn* cfn_init(cfn* c, fp f, unsigned argr, unsigned argn, ...) {
 	if (argr + argn > FN_ARGS_MAX) {
 		errno = E2BIG;
 		return NULL;
@@ -29,12 +29,12 @@ fn* fn_init(fn* c, fp f, unsigned argr, unsigned argn, ...) {
 	return c;
 }
 
-val fn_papp(fn* f, unsigned argn) {
+val cfn_papp(cfn* f, unsigned argn) {
 	/*if (argn + f->argp > FN_ARGS_MAX) {
 		errno = E2BIG;
 		return NULL;
 	}*/
-	fn* x = (fn*)malloc(sizeof(fn) + (argn + f->argp - 1) * sizeof(val));
+	cfn* x = (cfn*)malloc(sizeof(cfn) + (argn + f->argp - 1) * sizeof(val));
 	val *fenv = &f->env, *xenv = &x->env;
 	x->argr = f->argr - argn;
 	x->argp = f->argp + argn;

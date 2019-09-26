@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define VAL_EXTRA struct fn *fn;
+#define VAL_EXTRA struct cfn *fn;
 #include "val.h"
 
 /*
@@ -41,7 +41,7 @@ typedef struct fn {
 	};
 	fp f;	   /* function to apply */
 	val env;   /* environment entries start here */
-} fn;
+} cfn;
 
 /*
  * The maximum number of arguments.
@@ -64,7 +64,7 @@ abort()
  * returns: the initialized function pointer
  * ERROR: returns E2BIG if argc exceeds the CLO_ARGS_MAX.
  */
-extern fn* fn_init(fn* c, fp f, unsigned argc, unsigned argn, ...);
+extern cfn* cfn_init(cfn* c, fp f, unsigned argc, unsigned argn, ...);
 
 /**
  * Partially apply a function with the given number of new arguments.
@@ -73,14 +73,14 @@ extern fn* fn_init(fn* c, fp f, unsigned argc, unsigned argn, ...);
  * argn: the number of new arguments to add to the environment
  * returns: a new function with an expanded environment
  */
-extern val fn_papp(fn* f, unsigned argn);
+extern val cfn_papp(cfn* f, unsigned argn);
 
 /**
  * Call a function with 0 arguments.
  * f: the function to call
  * returns: the value returned from applying f
  */
-inline val fn_call0(fn* f) {
+inline val cfn_call0(cfn* f) {
 	val *env = &f->env;
 	switch ((f->argr << 3) | f->argp) {
 	case 0: return f->f.fn0();
@@ -103,7 +103,7 @@ inline val fn_call0(fn* f) {
  * arg0: the first argument
  * returns: the value returned from applying f
  */
-inline val fn_call1(fn* f, val arg0) {
+inline val cfn_call1(cfn* f, val arg0) {
 	val *env = &f->env;
 	switch (((f->argr - 1) << 3) | f->argp) {
 	case 0: return f->f.fn1(arg0);
@@ -122,7 +122,7 @@ inline val fn_call1(fn* f, val arg0) {
 			return x;
 		} else if (f->argr == 0) {
 			// over-application: apply as many arguments as possible
-			return fn_call1(fn_call0(f).fn, arg0);
+			return cfn_call1(cfn_call0(f).fn, arg0);
 		} else {
 			fn_fail(1);
 		}
@@ -136,7 +136,7 @@ inline val fn_call1(fn* f, val arg0) {
  * arg1: the second argument
  * returns: the value returned from applying f
  */
-inline val fn_call2(fn* f, val arg0, val arg1) {
+inline val cfn_call2(cfn* f, val arg0, val arg1) {
 	val *env = &f->env;
 	switch (((f->argr - 2) << 3) | f->argp) {
 	case 0: return f->f.fn2(arg0, arg1);
@@ -155,8 +155,8 @@ inline val fn_call2(fn* f, val arg0, val arg1) {
 		} else {
 			// over-application: apply as many arguments as possible
 			switch (f->argr) {
-			case 0: return fn_call2(fn_call0(f).fn, arg0, arg1);
-			case 1: return fn_call1(fn_call1(f, arg0).fn, arg1);
+			case 0: return cfn_call2(cfn_call0(f).fn, arg0, arg1);
+			case 1: return cfn_call1(cfn_call1(f, arg0).fn, arg1);
 			default:
 				fn_fail(2);
 			}
@@ -172,7 +172,7 @@ inline val fn_call2(fn* f, val arg0, val arg1) {
  * arg2: the third argument
  * returns: the value returned from applying f
  */
-inline val fn_call3(fn* f, val arg0, val arg1, val arg2) {
+inline val cfn_call3(cfn* f, val arg0, val arg1, val arg2) {
 	val *env = &f->env;
 	switch (((f->argr - 3) << 3) | f->argp) {
 	case 0: return f->f.fn3(arg0, arg1, arg2);
@@ -191,9 +191,9 @@ inline val fn_call3(fn* f, val arg0, val arg1, val arg2) {
 		} else {
 			// over-application: apply as many arguments as possible
 			switch (f->argr) {
-			case 0: return fn_call3(fn_call0(f).fn, arg0, arg1, arg2);
-			case 1: return fn_call2(fn_call1(f, arg0).fn, arg1, arg2);
-			case 2: return fn_call1(fn_call2(f, arg0, arg1).fn, arg2);
+			case 0: return cfn_call3(cfn_call0(f).fn, arg0, arg1, arg2);
+			case 1: return cfn_call2(cfn_call1(f, arg0).fn, arg1, arg2);
+			case 2: return cfn_call1(cfn_call2(f, arg0, arg1).fn, arg2);
 			default:
 				fn_fail(3);
 			}
@@ -210,7 +210,7 @@ inline val fn_call3(fn* f, val arg0, val arg1, val arg2) {
  * arg3: the fourth argument
  * returns: the value returned from applying f
  */
-inline val fn_call4(fn* f, val arg0, val arg1, val arg2, val arg3) {
+inline val cfn_call4(cfn* f, val arg0, val arg1, val arg2, val arg3) {
 	val *env = &f->env;
 	switch (((f->argr - 4) << 3) | f->argp) {
 	case 0: return f->f.fn4(arg0, arg1, arg2, arg3);
@@ -229,10 +229,10 @@ inline val fn_call4(fn* f, val arg0, val arg1, val arg2, val arg3) {
 		} else {
 			// over-application: apply as many arguments as possible
 			switch (f->argr) {
-			case 0: return fn_call4(fn_call0(f).fn, arg0, arg1, arg2, arg3);
-			case 1: return fn_call3(fn_call1(f, arg0).fn, arg1, arg2, arg3);
-			case 2: return fn_call2(fn_call2(f, arg0, arg1).fn, arg2, arg3);
-			case 3: return fn_call1(fn_call3(f, arg0, arg1, arg2).fn, arg3);
+			case 0: return cfn_call4(cfn_call0(f).fn, arg0, arg1, arg2, arg3);
+			case 1: return cfn_call3(cfn_call1(f, arg0).fn, arg1, arg2, arg3);
+			case 2: return cfn_call2(cfn_call2(f, arg0, arg1).fn, arg2, arg3);
+			case 3: return cfn_call1(cfn_call3(f, arg0, arg1, arg2).fn, arg3);
 			default:
 				fn_fail(4);
 			}
@@ -250,7 +250,7 @@ inline val fn_call4(fn* f, val arg0, val arg1, val arg2, val arg3) {
  * arg4: the fifth argument
  * returns: the value returned from applying f
  */
-inline val fn_call5(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
+inline val cfn_call5(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
 	val *env = &f->env;
 	switch (((f->argr - 5) << 3) | f->argp) {
 	case 0: return f->f.fn5(arg0, arg1, arg2, arg3, arg4);
@@ -269,11 +269,11 @@ inline val fn_call5(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
 		} else {
 			// over-application: apply as many arguments as possible
 			switch (f->argr) {
-			case 0: return fn_call5(fn_call0(f).fn, arg0, arg1, arg2, arg3, arg4);
-			case 1: return fn_call4(fn_call1(f, arg0).fn, arg1, arg2, arg3, arg4);
-			case 2: return fn_call3(fn_call2(f, arg0, arg1).fn, arg2, arg3, arg4);
-			case 3: return fn_call2(fn_call3(f, arg0, arg1, arg2).fn, arg3, arg4);
-			case 4: return fn_call1(fn_call4(f, arg0, arg1, arg2, arg3).fn, arg4);
+			case 0: return cfn_call5(cfn_call0(f).fn, arg0, arg1, arg2, arg3, arg4);
+			case 1: return cfn_call4(cfn_call1(f, arg0).fn, arg1, arg2, arg3, arg4);
+			case 2: return cfn_call3(cfn_call2(f, arg0, arg1).fn, arg2, arg3, arg4);
+			case 3: return cfn_call2(cfn_call3(f, arg0, arg1, arg2).fn, arg3, arg4);
+			case 4: return cfn_call1(cfn_call4(f, arg0, arg1, arg2, arg3).fn, arg4);
 			default:
 				fn_fail(5);
 			}
@@ -292,7 +292,7 @@ inline val fn_call5(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
  * arg5: the sixth argument
  * returns: the value returned from applying f
  */
-inline val fn_call6(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5) {
+inline val cfn_call6(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5) {
 	val *env = &f->env;
 	switch (((f->argr - 6) << 3) | f->argp) {
 	case 0: return f->f.fn6(arg0, arg1, arg2, arg3, arg4, arg5);
@@ -311,12 +311,12 @@ inline val fn_call6(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 		} else {
 			// over-application: apply as many arguments as possible
 			switch (f->argr) {
-			case 0: return fn_call6(fn_call0(f).fn, arg0, arg1, arg2, arg3, arg4, arg5);
-			case 1: return fn_call5(fn_call1(f, arg0).fn, arg1, arg2, arg3, arg4, arg5);
-			case 2: return fn_call4(fn_call2(f, arg0, arg1).fn, arg2, arg3, arg4, arg5);
-			case 3: return fn_call3(fn_call3(f, arg0, arg1, arg2).fn, arg3, arg4, arg5);
-			case 4: return fn_call2(fn_call4(f, arg0, arg1, arg2, arg3).fn, arg4, arg5);
-			case 5: return fn_call1(fn_call5(f, arg0, arg1, arg2, arg3, arg4).fn, arg5);
+			case 0: return cfn_call6(cfn_call0(f).fn, arg0, arg1, arg2, arg3, arg4, arg5);
+			case 1: return cfn_call5(cfn_call1(f, arg0).fn, arg1, arg2, arg3, arg4, arg5);
+			case 2: return cfn_call4(cfn_call2(f, arg0, arg1).fn, arg2, arg3, arg4, arg5);
+			case 3: return cfn_call3(cfn_call3(f, arg0, arg1, arg2).fn, arg3, arg4, arg5);
+			case 4: return cfn_call2(cfn_call4(f, arg0, arg1, arg2, arg3).fn, arg4, arg5);
+			case 5: return cfn_call1(cfn_call5(f, arg0, arg1, arg2, arg3, arg4).fn, arg5);
 			default:
 				fn_fail(6);
 			}
@@ -336,7 +336,7 @@ inline val fn_call6(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
  * arg6: the seventh argument
  * returns: the value returned from applying f
  */
-inline val fn_call7(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6) {
+inline val cfn_call7(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6) {
 	val *env = &f->env;
 	switch (((f->argr - 7) << 3) | f->argp) {
 	case 0: return f->f.fn7(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
@@ -358,13 +358,13 @@ inline val fn_call7(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 			//FIXME: tmp closure needs to be cleaned up?
 			val tmp, x;
 			switch (f->argr) {
-			case 0: x = fn_call7((tmp = fn_call0(f)).fn, arg0, arg1, arg2, arg3, arg4, arg5, arg6); break;
-			case 1: x = fn_call6((tmp = fn_call1(f, arg0)).fn, arg1, arg2, arg3, arg4, arg5, arg6); break;
-			case 2: x = fn_call5((tmp = fn_call2(f, arg0, arg1)).fn, arg2, arg3, arg4, arg5, arg6); break;
-			case 3: x = fn_call4((tmp = fn_call3(f, arg0, arg1, arg2)).fn, arg3, arg4, arg5, arg6); break;
-			case 4: x = fn_call3((tmp = fn_call4(f, arg0, arg1, arg2, arg3)).fn, arg4, arg5, arg6); break;
-			case 5: x = fn_call2((tmp = fn_call5(f, arg0, arg1, arg2, arg3, arg4)).fn, arg5, arg6); break;
-			case 6: x = fn_call1((tmp = fn_call6(f, arg0, arg1, arg2, arg3, arg4, arg5)).fn, arg6); break;
+			case 0: x = cfn_call7((tmp = cfn_call0(f)).fn, arg0, arg1, arg2, arg3, arg4, arg5, arg6); break;
+			case 1: x = cfn_call6((tmp = cfn_call1(f, arg0)).fn, arg1, arg2, arg3, arg4, arg5, arg6); break;
+			case 2: x = cfn_call5((tmp = cfn_call2(f, arg0, arg1)).fn, arg2, arg3, arg4, arg5, arg6); break;
+			case 3: x = cfn_call4((tmp = cfn_call3(f, arg0, arg1, arg2)).fn, arg3, arg4, arg5, arg6); break;
+			case 4: x = cfn_call3((tmp = cfn_call4(f, arg0, arg1, arg2, arg3)).fn, arg4, arg5, arg6); break;
+			case 5: x = cfn_call2((tmp = cfn_call5(f, arg0, arg1, arg2, arg3, arg4)).fn, arg5, arg6); break;
+			case 6: x = cfn_call1((tmp = cfn_call6(f, arg0, arg1, arg2, arg3, arg4, arg5)).fn, arg6); break;
 			default:
 				fn_fail(7);
 			}
@@ -387,7 +387,7 @@ inline val fn_call7(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
  * arg6: the eighth argument
  * returns: the value returned from applying f
  */
-inline val fn_call8(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7) {
+inline val cfn_call8(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7) {
 	//val *env = &f->env;
 	if (!((f->argr - 8) << 3) && f->argp == 0) {
 		return f->f.fn8(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
@@ -407,14 +407,14 @@ inline val fn_call8(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 		//FIXME: tmp closure needs to be cleaned up?
 		val tmp, x;
 		switch (f->argr) {
-		case 0: x = fn_call8((tmp = fn_call0(f)).fn, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7); break;
-		case 1: x = fn_call7((tmp = fn_call1(f, arg0)).fn, arg1, arg2, arg3, arg4, arg5, arg6, arg7); break;
-		case 2: x = fn_call6((tmp = fn_call2(f, arg0, arg1)).fn, arg2, arg3, arg4, arg5, arg6, arg7); break;
-		case 3: x = fn_call5((tmp = fn_call3(f, arg0, arg1, arg2)).fn, arg3, arg4, arg5, arg6, arg7); break;
-		case 4: x = fn_call4((tmp = fn_call4(f, arg0, arg1, arg2, arg3)).fn, arg4, arg5, arg6, arg7); break;
-		case 5: x = fn_call3((tmp = fn_call5(f, arg0, arg1, arg2, arg3, arg4)).fn, arg5, arg6, arg7); break;
-		case 6: x = fn_call2((tmp = fn_call6(f, arg0, arg1, arg2, arg3, arg4, arg5)).fn, arg6, arg7); break;
-		case 7: x = fn_call1((tmp = fn_call7(f, arg0, arg1, arg2, arg3, arg4, arg5, arg6)).fn, arg7); break;
+		case 0: x = cfn_call8((tmp = cfn_call0(f)).fn, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7); break;
+		case 1: x = cfn_call7((tmp = cfn_call1(f, arg0)).fn, arg1, arg2, arg3, arg4, arg5, arg6, arg7); break;
+		case 2: x = cfn_call6((tmp = cfn_call2(f, arg0, arg1)).fn, arg2, arg3, arg4, arg5, arg6, arg7); break;
+		case 3: x = cfn_call5((tmp = cfn_call3(f, arg0, arg1, arg2)).fn, arg3, arg4, arg5, arg6, arg7); break;
+		case 4: x = cfn_call4((tmp = cfn_call4(f, arg0, arg1, arg2, arg3)).fn, arg4, arg5, arg6, arg7); break;
+		case 5: x = cfn_call3((tmp = cfn_call5(f, arg0, arg1, arg2, arg3, arg4)).fn, arg5, arg6, arg7); break;
+		case 6: x = cfn_call2((tmp = cfn_call6(f, arg0, arg1, arg2, arg3, arg4, arg5)).fn, arg6, arg7); break;
+		case 7: x = cfn_call1((tmp = cfn_call7(f, arg0, arg1, arg2, arg3, arg4, arg5, arg6)).fn, arg7); break;
 		default:
 			fn_fail(8);
 		}
