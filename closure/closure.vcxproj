@@ -20,10 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cfn.h" />
+    <ClInclude Include="fn.h" />
     <ClInclude Include="val.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cfn.c" />
+    <ClCompile Include="fn.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

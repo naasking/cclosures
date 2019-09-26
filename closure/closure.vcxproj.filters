@@ -21,12 +21,18 @@
     <ClCompile Include="cfn.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="fn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="val.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cfn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
