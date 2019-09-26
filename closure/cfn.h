@@ -31,7 +31,7 @@ typedef union {
 /*
  * The closure type.
  */
-typedef struct fn {
+typedef struct cfn {
 	union {
 		unsigned argr : 3; /* remaining argument count */
 		unsigned argp : 3; /* provided argument count, ie. env length */
