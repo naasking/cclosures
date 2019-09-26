@@ -6,6 +6,8 @@
  *
  * This implements eval/apply style closures for C based around a universal value type 'val',
  * which is currently defined to be machine word-sized.
+ *
+ * It supports functions accepting up to 8 arguments, but is easily expandable to more.
  */
 
 #include <stdio.h>
@@ -15,7 +17,7 @@
 #include "val.h"
 
 /*
- * The type of all closures. The first arg is a structure pointer for multiargument functions.
+ * The type of all closures.
  */
 typedef union {
 	val(*fn0)();
@@ -34,11 +36,11 @@ typedef union {
  */
 typedef struct fn {
 	union {
-		unsigned argr : 3;
-		unsigned argp : 3;
+		unsigned argr : 3; /* remaining argument count */
+		unsigned argp : 3; /* provided argument count, ie. env length */
 	};
 	fp f;	   /* function to apply */
-	val env;  /* environment entries start here */
+	val env;   /* environment entries start here */
 } fn;
 
 /*
@@ -55,15 +57,29 @@ abort()
 /*
  * Initialize an existing closure record with the given arguments.
  *
+ * c: the newly allocated closure pointer
+ * f: the function pointer
+ * argc: the number of arguments that f accepts
+ * argn: the number of arguments being passed in
+ * returns: the initialized function pointer
  * ERROR: returns E2BIG if argc exceeds the CLO_ARGS_MAX.
  */
 extern fn* fn_init(fn* c, fp f, unsigned argc, unsigned argn, ...);
 
 /**
  * Partially apply a function with the given number of new arguments.
+ *
+ * f: the closure pointer
+ * argn: the number of new arguments to add to the environment
+ * returns: a new function with an expanded environment
  */
 extern val fn_papp(fn* f, unsigned argn);
 
+/**
+ * Call a function with 0 arguments.
+ * f: the function to call
+ * returns: the value returned from applying f
+ */
 inline val fn_call0(fn* f) {
 	val *env = &f->env;
 	switch ((f->argr << 3) | f->argp) {
@@ -81,6 +97,12 @@ inline val fn_call0(fn* f) {
 	}
 }
 
+/**
+ * Call a function with 1 argument.
+ * f: the function to call
+ * arg0: the first argument
+ * returns: the value returned from applying f
+ */
 inline val fn_call1(fn* f, val arg0) {
 	val *env = &f->env;
 	switch (((f->argr - 1) << 3) | f->argp) {
@@ -107,6 +129,13 @@ inline val fn_call1(fn* f, val arg0) {
 	}
 }
 
+/**
+ * Call a function with 2 arguments.
+ * f: the function to call
+ * arg0: the first argument
+ * arg1: the second argument
+ * returns: the value returned from applying f
+ */
 inline val fn_call2(fn* f, val arg0, val arg1) {
 	val *env = &f->env;
 	switch (((f->argr - 2) << 3) | f->argp) {
@@ -135,6 +164,14 @@ inline val fn_call2(fn* f, val arg0, val arg1) {
 	}
 }
 
+/**
+ * Call a function with 3 arguments.
+ * f: the function to call
+ * arg0: the first argument
+ * arg1: the second argument
+ * arg2: the third argument
+ * returns: the value returned from applying f
+ */
 inline val fn_call3(fn* f, val arg0, val arg1, val arg2) {
 	val *env = &f->env;
 	switch (((f->argr - 3) << 3) | f->argp) {
@@ -164,6 +201,15 @@ inline val fn_call3(fn* f, val arg0, val arg1, val arg2) {
 	}
 }
 
+/**
+ * Call a function with 4 arguments.
+ * f: the function to call
+ * arg0: the first argument
+ * arg1: the second argument
+ * arg2: the third argument
+ * arg3: the fourth argument
+ * returns: the value returned from applying f
+ */
 inline val fn_call4(fn* f, val arg0, val arg1, val arg2, val arg3) {
 	val *env = &f->env;
 	switch (((f->argr - 4) << 3) | f->argp) {
@@ -194,6 +240,16 @@ inline val fn_call4(fn* f, val arg0, val arg1, val arg2, val arg3) {
 	}
 }
 
+/**
+ * Call a function with 5 arguments.
+ * f: the function to call
+ * arg0: the first argument
+ * arg1: the second argument
+ * arg2: the third argument
+ * arg3: the fourth argument
+ * arg4: the fifth argument
+ * returns: the value returned from applying f
+ */
 inline val fn_call5(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
 	val *env = &f->env;
 	switch (((f->argr - 5) << 3) | f->argp) {
@@ -225,6 +281,17 @@ inline val fn_call5(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
 	}
 }
 
+/**
+ * Call a function with 6 arguments.
+ * f: the function to call
+ * arg0: the first argument
+ * arg1: the second argument
+ * arg2: the third argument
+ * arg3: the fourth argument
+ * arg4: the fifth argument
+ * arg5: the sixth argument
+ * returns: the value returned from applying f
+ */
 inline val fn_call6(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5) {
 	val *env = &f->env;
 	switch (((f->argr - 6) << 3) | f->argp) {
@@ -257,6 +324,18 @@ inline val fn_call6(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 	}
 }
 
+/**
+ * Call a function with 7 arguments.
+ * f: the function to call
+ * arg0: the first argument
+ * arg1: the second argument
+ * arg2: the third argument
+ * arg3: the fourth argument
+ * arg4: the fifth argument
+ * arg5: the sixth argument
+ * arg6: the seventh argument
+ * returns: the value returned from applying f
+ */
 inline val fn_call7(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6) {
 	val *env = &f->env;
 	switch (((f->argr - 7) << 3) | f->argp) {
@@ -295,6 +374,19 @@ inline val fn_call7(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 	}
 }
 
+/**
+ * Call a function with 8 arguments.
+ * f: the function to call
+ * arg0: the first argument
+ * arg1: the second argument
+ * arg2: the third argument
+ * arg3: the fourth argument
+ * arg4: the fifth argument
+ * arg5: the sixth argument
+ * arg6: the seventh argument
+ * arg6: the eighth argument
+ * returns: the value returned from applying f
+ */
 inline val fn_call8(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7) {
 	//val *env = &f->env;
 	if (!((f->argr - 8) << 3) && f->argp == 0) {
@@ -331,4 +423,4 @@ inline val fn_call8(fn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val
 	}
 }
 
-#endif /* FN_H */
+#endif /* CFN_H */
