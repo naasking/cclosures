@@ -10,9 +10,6 @@
  * It supports functions accepting up to 8 arguments, but is easily expandable to more.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #define VAL_EXTRA struct cfn *fn;
 #include "val.h"
 
@@ -48,8 +45,10 @@ typedef struct fn {
  */
 #define FN_ARGS_MAX 8
 
-#ifndef fn_fail
-#define fn_fail(argn) \
+#ifndef cfn_fail
+#include <stdio.h>
+#include <stdlib.h>
+#define cfn_fail(argn) \
 fprintf(stderr, "%s: required %d args but called with %d\r\n", __func__, f->argr, argn); \
 abort()
 #endif
@@ -93,7 +92,7 @@ inline val cfn_call0(cfn* f) {
 	case 7: return f->f.fn7(env[0], env[1], env[2], env[3], env[4], env[5], env[6]);
 	case 8: return f->f.fn8(env[0], env[1], env[2], env[3], env[4], env[5], env[6], env[7]);
 	default:
-		fn_fail(0);
+		cfn_fail(0);
 	}
 }
 
@@ -117,14 +116,14 @@ inline val cfn_call1(cfn* f, val arg0) {
 	default:
 		if (f->argr > 1) {
 			// partial application: lift argX to env and return lambda
-			val x = fn_papp(f, f->argp + 1);
+			val x = cfn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			return x;
 		} else if (f->argr == 0) {
 			// over-application: apply as many arguments as possible
 			return cfn_call1(cfn_call0(f).fn, arg0);
 		} else {
-			fn_fail(1);
+			cfn_fail(1);
 		}
 	}
 }
@@ -148,7 +147,7 @@ inline val cfn_call2(cfn* f, val arg0, val arg1) {
 	case 6: return f->f.fn8(env[0], env[1], env[2], env[3], env[4], env[5], arg0, arg1);
 	default:
 		if (f->argr > 2) {
-			val x = fn_papp(f, f->argp + 1);
+			val x = cfn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			(&x.fn->env)[f->argp + 1] = arg1;
 			return x;
@@ -158,7 +157,7 @@ inline val cfn_call2(cfn* f, val arg0, val arg1) {
 			case 0: return cfn_call2(cfn_call0(f).fn, arg0, arg1);
 			case 1: return cfn_call1(cfn_call1(f, arg0).fn, arg1);
 			default:
-				fn_fail(2);
+				cfn_fail(2);
 			}
 		}
 	}
@@ -183,7 +182,7 @@ inline val cfn_call3(cfn* f, val arg0, val arg1, val arg2) {
 	case 5: return f->f.fn8(env[0], env[1], env[2], env[3], env[4], arg0, arg1, arg2);
 	default:
 		if (f->argr > 3) {
-			val x = fn_papp(f, f->argp + 1);
+			val x = cfn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			(&x.fn->env)[f->argp + 1] = arg1;
 			(&x.fn->env)[f->argp + 2] = arg2;
@@ -195,7 +194,7 @@ inline val cfn_call3(cfn* f, val arg0, val arg1, val arg2) {
 			case 1: return cfn_call2(cfn_call1(f, arg0).fn, arg1, arg2);
 			case 2: return cfn_call1(cfn_call2(f, arg0, arg1).fn, arg2);
 			default:
-				fn_fail(3);
+				cfn_fail(3);
 			}
 		}
 	}
@@ -220,7 +219,7 @@ inline val cfn_call4(cfn* f, val arg0, val arg1, val arg2, val arg3) {
 	case 4: return f->f.fn8(env[0], env[1], env[2], env[3], arg0, arg1, arg2, arg3);
 	default:
 		if (f->argr > 4) {
-			val x = fn_papp(f, f->argp + 1);
+			val x = cfn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			(&x.fn->env)[f->argp + 1] = arg1;
 			(&x.fn->env)[f->argp + 2] = arg2;
@@ -234,7 +233,7 @@ inline val cfn_call4(cfn* f, val arg0, val arg1, val arg2, val arg3) {
 			case 2: return cfn_call2(cfn_call2(f, arg0, arg1).fn, arg2, arg3);
 			case 3: return cfn_call1(cfn_call3(f, arg0, arg1, arg2).fn, arg3);
 			default:
-				fn_fail(4);
+				cfn_fail(4);
 			}
 		}
 	}
@@ -259,7 +258,7 @@ inline val cfn_call5(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
 	case 3: return f->f.fn8(env[0], env[1], env[2], arg0, arg1, arg2, arg3, arg4);
 	default:
 		if (f->argr > 5) {
-			val x = fn_papp(f, f->argp + 1);
+			val x = cfn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			(&x.fn->env)[f->argp + 1] = arg1;
 			(&x.fn->env)[f->argp + 2] = arg2;
@@ -275,7 +274,7 @@ inline val cfn_call5(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
 			case 3: return cfn_call2(cfn_call3(f, arg0, arg1, arg2).fn, arg3, arg4);
 			case 4: return cfn_call1(cfn_call4(f, arg0, arg1, arg2, arg3).fn, arg4);
 			default:
-				fn_fail(5);
+				cfn_fail(5);
 			}
 		}
 	}
@@ -300,7 +299,7 @@ inline val cfn_call6(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, v
 	case 2: return f->f.fn8(env[0], env[1], arg0, arg1, arg2, arg3, arg4, arg5);
 	default:
 		if (f->argr > 6) {
-			val x = fn_papp(f, f->argp + 1);
+			val x = cfn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			(&x.fn->env)[f->argp + 1] = arg1;
 			(&x.fn->env)[f->argp + 2] = arg2;
@@ -318,7 +317,7 @@ inline val cfn_call6(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, v
 			case 4: return cfn_call2(cfn_call4(f, arg0, arg1, arg2, arg3).fn, arg4, arg5);
 			case 5: return cfn_call1(cfn_call5(f, arg0, arg1, arg2, arg3, arg4).fn, arg5);
 			default:
-				fn_fail(6);
+				cfn_fail(6);
 			}
 		}
 	}
@@ -344,7 +343,7 @@ inline val cfn_call7(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, v
 	default:
 		//FIXME: 
 		if (f->argr > 7) {
-			val x = fn_papp(f, f->argp + 1);
+			val x = cfn_papp(f, f->argp + 1);
 			(&x.fn->env)[f->argp] = arg0;
 			(&x.fn->env)[f->argp + 1] = arg1;
 			(&x.fn->env)[f->argp + 2] = arg2;
@@ -366,7 +365,7 @@ inline val cfn_call7(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, v
 			case 5: x = cfn_call2((tmp = cfn_call5(f, arg0, arg1, arg2, arg3, arg4)).fn, arg5, arg6); break;
 			case 6: x = cfn_call1((tmp = cfn_call6(f, arg0, arg1, arg2, arg3, arg4, arg5)).fn, arg6); break;
 			default:
-				fn_fail(7);
+				cfn_fail(7);
 			}
 			free(tmp.fn);
 			return x;
@@ -392,7 +391,7 @@ inline val cfn_call8(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, v
 	if (!((f->argr - 8) << 3) && f->argp == 0) {
 		return f->f.fn8(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
 	} else if (f->argr > 8) {
-		val x = fn_papp(f, f->argp + 1);
+		val x = cfn_papp(f, f->argp + 1);
 		(&x.fn->env)[f->argp] = arg0;
 		(&x.fn->env)[f->argp + 1] = arg1;
 		(&x.fn->env)[f->argp + 2] = arg2;
@@ -416,7 +415,7 @@ inline val cfn_call8(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, v
 		case 6: x = cfn_call2((tmp = cfn_call6(f, arg0, arg1, arg2, arg3, arg4, arg5)).fn, arg6, arg7); break;
 		case 7: x = cfn_call1((tmp = cfn_call7(f, arg0, arg1, arg2, arg3, arg4, arg5, arg6)).fn, arg7); break;
 		default:
-			fn_fail(8);
+			cfn_fail(8);
 		}
 		free(tmp.fn);
 		return x;

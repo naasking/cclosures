@@ -1,4 +1,5 @@
 #include "cfn.h"
+#include "fn.h"
 #include <stdio.h>
 
 val foo(val arg0) {
