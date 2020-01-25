@@ -154,7 +154,7 @@ extern fnx fnx_papp(fnx f, unsigned argn);
  * xN: the Nth argument.
  * returns: the value returned by the enclosed function.
  */
-inline val fn8_call(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6, val x7) {
+static inline val fn8_call(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6, val x7) {
 	return f->fn8(x0, x1, x2, x3, x4, x5, x6, x7);
 }
 
@@ -165,7 +165,7 @@ inline val fn8_call(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5, val 
  * xN: the Nth argument.
  * returns: a 7 argument function.
  */
-inline fn7* fn8_wrap1(fn8* f, val x0) {
+static inline fn7* fn8_wrap1(fn8* f, val x0) {
 	fnx x;
 	x.fn8 = f;
 	x = fnx_papp(x, 1);
@@ -180,7 +180,7 @@ inline fn7* fn8_wrap1(fn8* f, val x0) {
  * xN: the Nth argument.
  * returns: a 6 argument function.
  */
-inline fn6* fn8_wrap2(fn8* f, val x0, val x1) {
+static inline fn6* fn8_wrap2(fn8* f, val x0, val x1) {
 	fnx fn;
 	fn.fn8 = f;
 	fn6* x = fnx_papp(fn, 2).fn6;
@@ -196,7 +196,7 @@ inline fn6* fn8_wrap2(fn8* f, val x0, val x1) {
  * xN: the Nth argument.
  * returns: a 5 argument function.
  */
-inline fn5* fn8_wrap3(fn8* f, val x0, val x1, val x2) {
+static inline fn5* fn8_wrap3(fn8* f, val x0, val x1, val x2) {
 	fnx fn;
 	fn.fn8 = f;
 	fn5* x = fnx_papp(fn, 3).fn5;
@@ -213,7 +213,7 @@ inline fn5* fn8_wrap3(fn8* f, val x0, val x1, val x2) {
  * xN: the Nth argument.
  * returns: a 4 argument function.
  */
-inline fn4* fn8_wrap4(fn8* f, val x0, val x1, val x2, val x3) {
+static inline fn4* fn8_wrap4(fn8* f, val x0, val x1, val x2, val x3) {
 	fnx fn;
 	fn.fn8 = f;
 	fn4* x = fnx_papp(fn, 4).fn4;
@@ -231,7 +231,7 @@ inline fn4* fn8_wrap4(fn8* f, val x0, val x1, val x2, val x3) {
  * xN: the Nth argument.
  * returns: a 3 argument function.
  */
-inline fn3* fn8_wrap5(fn8* f, val x0, val x1, val x2, val x3, val x4) {
+static inline fn3* fn8_wrap5(fn8* f, val x0, val x1, val x2, val x3, val x4) {
 	fnx fn;
 	fn.fn8 = f;
 	fn3* x = fnx_papp(fn, 5).fn3;
@@ -250,7 +250,7 @@ inline fn3* fn8_wrap5(fn8* f, val x0, val x1, val x2, val x3, val x4) {
  * xN: the Nth argument.
  * returns: a 2 argument function.
  */
-inline fn2* fn8_wrap6(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5) {
+static inline fn2* fn8_wrap6(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5) {
 	fnx fn;
 	fn.fn8 = f;
 	fn2* x = fnx_papp(fn, 6).fn2;
@@ -270,7 +270,7 @@ inline fn2* fn8_wrap6(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5) {
  * xN: the Nth argument.
  * returns: a 1 argument function.
  */
-inline fn1* fn8_wrap7(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6) {
+static inline fn1* fn8_wrap7(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6) {
 	fnx fn;
 	fn.fn8 = f;
 	fn1* x = fnx_papp(fn, 7).fn1;
@@ -291,7 +291,7 @@ inline fn1* fn8_wrap7(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5, va
  * xN: the Nth argument.
  * returns: a 1 argument function.
  */
-inline fn0* fn8_wrap8(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6, val x7) {
+static inline fn0* fn8_wrap8(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6, val x7) {
 	fnx fn;
 	fn.fn8 = f;
 	fn0* x = fnx_papp(fn, 8).fn0;
@@ -314,7 +314,7 @@ inline fn0* fn8_wrap8(fn8* f, val x0, val x1, val x2, val x3, val x4, val x5, va
  * xN: the Nth argument.
  * returns: a 6 argument function.
  */
-inline val fn7_call(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6) {
+static inline val fn7_call(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6) {
 	val *env = &f->env;
 	switch (f->envc) {
 	case 0: return f->fn7(x0, x1, x2, x3, x4, x5, x6);
@@ -331,7 +331,7 @@ inline val fn7_call(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5, val 
  * xN: the Nth argument.
  * returns: a 6 argument function.
  */
-inline fn6* fn7_wrap1(fn7* f, val x0) {
+static inline fn6* fn7_wrap1(fn7* f, val x0) {
 	fnx fn;
 	fn.fn7 = f;
 	fn6* x = fnx_papp(fn, 1).fn6;
@@ -346,7 +346,7 @@ inline fn6* fn7_wrap1(fn7* f, val x0) {
  * xN: the Nth argument.
  * returns: a 5 argument function.
  */
-inline fn5* fn7_wrap2(fn7* f, val x0, val x1) {
+static inline fn5* fn7_wrap2(fn7* f, val x0, val x1) {
 	fnx fn;
 	fn.fn7 = f;
 	fn5* x = fnx_papp(fn, 2).fn5;
@@ -362,7 +362,7 @@ inline fn5* fn7_wrap2(fn7* f, val x0, val x1) {
  * xN: the Nth argument.
  * returns: a 4 argument function.
  */
-inline fn4* fn7_wrap3(fn7* f, val x0, val x1, val x2) {
+static inline fn4* fn7_wrap3(fn7* f, val x0, val x1, val x2) {
 	fnx fn;
 	fn.fn7 = f;
 	fn4* x = fnx_papp(fn, 3).fn4;
@@ -379,7 +379,7 @@ inline fn4* fn7_wrap3(fn7* f, val x0, val x1, val x2) {
  * xN: the Nth argument.
  * returns: a 3 argument function.
  */
-inline fn3* fn7_wrap4(fn7* f, val x0, val x1, val x2, val x3) {
+static inline fn3* fn7_wrap4(fn7* f, val x0, val x1, val x2, val x3) {
 	fnx fn;
 	fn.fn7 = f;
 	fn3* x = fnx_papp(fn, 4).fn3;
@@ -397,7 +397,7 @@ inline fn3* fn7_wrap4(fn7* f, val x0, val x1, val x2, val x3) {
  * xN: the Nth argument.
  * returns: a 2 argument function.
  */
-inline fn2* fn7_wrap5(fn7* f, val x0, val x1, val x2, val x3, val x4) {
+static inline fn2* fn7_wrap5(fn7* f, val x0, val x1, val x2, val x3, val x4) {
 	fnx fn;
 	fn.fn7 = f;
 	fn2* x = fnx_papp(fn, 5).fn2;
@@ -416,7 +416,7 @@ inline fn2* fn7_wrap5(fn7* f, val x0, val x1, val x2, val x3, val x4) {
  * xN: the Nth argument.
  * returns: a 1 argument function.
  */
-inline fn1* fn7_wrap6(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5) {
+static inline fn1* fn7_wrap6(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5) {
 	fnx fn;
 	fn.fn7 = f;
 	fn1* x = fnx_papp(fn, 6).fn1;
@@ -436,7 +436,7 @@ inline fn1* fn7_wrap6(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5) {
  * xN: the Nth argument.
  * returns: a 0 argument function.
  */
-inline fn0* fn7_wrap7(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6) {
+static inline fn0* fn7_wrap7(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5, val x6) {
 	fnx fn;
 	fn.fn7 = f;
 	fn0* x = fnx_papp(fn, 7).fn0;
@@ -457,7 +457,7 @@ inline fn0* fn7_wrap7(fn7* f, val x0, val x1, val x2, val x3, val x4, val x5, va
  * xN: the Nth argument.
  * returns: value from applying the function.
  */
-inline val fn6_call(fn6* f, val x0, val x1, val x2, val x3, val x4, val x5) {
+static inline val fn6_call(fn6* f, val x0, val x1, val x2, val x3, val x4, val x5) {
 	val *env = &f->env;
 	switch (f->envc) {
 	case 0: return f->fn6(x0, x1, x2, x3, x4, x5);
@@ -475,7 +475,7 @@ inline val fn6_call(fn6* f, val x0, val x1, val x2, val x3, val x4, val x5) {
  * xN: the Nth argument.
  * returns: a 5 argument function.
  */
-inline fn5* fn6_wrap1(fn6* f, val x0) {
+static inline fn5* fn6_wrap1(fn6* f, val x0) {
 	fnx fn;
 	fn.fn6 = f;
 	fn5* x = fnx_papp(fn, 1).fn5;
@@ -490,7 +490,7 @@ inline fn5* fn6_wrap1(fn6* f, val x0) {
  * xN: the Nth argument.
  * returns: a 4 argument function.
  */
-inline fn4* fn6_wrap2(fn6* f, val x0, val x1) {
+static inline fn4* fn6_wrap2(fn6* f, val x0, val x1) {
 	fnx fn;
 	fn.fn6 = f;
 	fn4* x = fnx_papp(fn, 2).fn4;
@@ -506,7 +506,7 @@ inline fn4* fn6_wrap2(fn6* f, val x0, val x1) {
  * xN: the Nth argument.
  * returns: a 3 argument function.
  */
-inline fn3* fn6_wrap3(fn6* f, val x0, val x1, val x2) {
+static inline fn3* fn6_wrap3(fn6* f, val x0, val x1, val x2) {
 	fnx fn;
 	fn.fn6 = f;
 	fn3* x = fnx_papp(fn, 3).fn3;
@@ -523,7 +523,7 @@ inline fn3* fn6_wrap3(fn6* f, val x0, val x1, val x2) {
  * xN: the Nth argument.
  * returns: a 2 argument function.
  */
-inline fn2* fn6_wrap4(fn6* f, val x0, val x1, val x2, val x3) {
+static inline fn2* fn6_wrap4(fn6* f, val x0, val x1, val x2, val x3) {
 	fnx fn;
 	fn.fn6 = f;
 	fn2* x = fnx_papp(fn, 4).fn2;
@@ -541,7 +541,7 @@ inline fn2* fn6_wrap4(fn6* f, val x0, val x1, val x2, val x3) {
  * xN: the Nth argument.
  * returns: a 1 argument function.
  */
-inline fn1* fn6_wrap5(fn6* f, val x0, val x1, val x2, val x3, val x4) {
+static inline fn1* fn6_wrap5(fn6* f, val x0, val x1, val x2, val x3, val x4) {
 	fnx fn;
 	fn.fn6 = f;
 	fn1* x = fnx_papp(fn, 5).fn1;
@@ -560,7 +560,7 @@ inline fn1* fn6_wrap5(fn6* f, val x0, val x1, val x2, val x3, val x4) {
  * xN: the Nth argument.
  * returns: a 0 argument function.
  */
-inline fn0* fn6_wrap6(fn6* f, val x0, val x1, val x2, val x3, val x4, val x5) {
+static inline fn0* fn6_wrap6(fn6* f, val x0, val x1, val x2, val x3, val x4, val x5) {
 	fnx fn;
 	fn.fn6 = f;
 	fn0* x = fnx_papp(fn, 6).fn0;
@@ -581,7 +581,7 @@ inline fn0* fn6_wrap6(fn6* f, val x0, val x1, val x2, val x3, val x4, val x5) {
  * xN: the Nth argument.
  * returns: value from applying the function.
  */
-inline val fn5_call(fn5* f, val x0, val x1, val x2, val x3, val x4) {
+static inline val fn5_call(fn5* f, val x0, val x1, val x2, val x3, val x4) {
 	val *env = &f->env;
 	switch (f->envc) {
 	case 0: return f->fn5(x0, x1, x2, x3, x4);
@@ -600,7 +600,7 @@ inline val fn5_call(fn5* f, val x0, val x1, val x2, val x3, val x4) {
  * xN: the Nth argument.
  * returns: a 4 argument function.
  */
-inline fn4* fn5_wrap1(fn5* f, val x0) {
+static inline fn4* fn5_wrap1(fn5* f, val x0) {
 	fnx fn;
 	fn.fn5 = f;
 	fn4* x = fnx_papp(fn, 1).fn4;
@@ -615,7 +615,7 @@ inline fn4* fn5_wrap1(fn5* f, val x0) {
  * xN: the Nth argument.
  * returns: a 4 argument function.
  */
-inline fn3* fn5_wrap2(fn5* f, val x0, val x1) {
+static inline fn3* fn5_wrap2(fn5* f, val x0, val x1) {
 	fnx fn;
 	fn.fn5 = f;
 	fn3* x = fnx_papp(fn, 2).fn3;
@@ -631,7 +631,7 @@ inline fn3* fn5_wrap2(fn5* f, val x0, val x1) {
  * xN: the Nth argument.
  * returns: a 3 argument function.
  */
-inline fn2* fn5_wrap3(fn5* f, val x0, val x1, val x2) {
+static inline fn2* fn5_wrap3(fn5* f, val x0, val x1, val x2) {
 	fnx fn;
 	fn.fn5 = f;
 	fn2* x = fnx_papp(fn, 3).fn2;
@@ -648,7 +648,7 @@ inline fn2* fn5_wrap3(fn5* f, val x0, val x1, val x2) {
  * xN: the Nth argument.
  * returns: a 2 argument function.
  */
-inline fn1* fn5_wrap4(fn5* f, val x0, val x1, val x2, val x3) {
+static inline fn1* fn5_wrap4(fn5* f, val x0, val x1, val x2, val x3) {
 	fnx fn;
 	fn.fn5 = f;
 	fn1* x = fnx_papp(fn, 4).fn1;
@@ -666,7 +666,7 @@ inline fn1* fn5_wrap4(fn5* f, val x0, val x1, val x2, val x3) {
  * xN: the Nth argument.
  * returns: a 1 argument function.
  */
-inline fn0* fn5_wrap5(fn5* f, val x0, val x1, val x2, val x3, val x4) {
+static inline fn0* fn5_wrap5(fn5* f, val x0, val x1, val x2, val x3, val x4) {
 	fnx fn;
 	fn.fn5 = f;
 	fn0* x = fnx_papp(fn, 5).fn0;
@@ -685,7 +685,7 @@ inline fn0* fn5_wrap5(fn5* f, val x0, val x1, val x2, val x3, val x4) {
  * xN: the Nth argument.
  * returns: value from applying the function.
  */
-inline val fn4_call(fn4* f, val x0, val x1, val x2, val x3) {
+static inline val fn4_call(fn4* f, val x0, val x1, val x2, val x3) {
 	val *env = &f->env;
 	switch (f->envc) {
 	case 0: return f->fn4(x0, x1, x2, x3);
@@ -705,7 +705,7 @@ inline val fn4_call(fn4* f, val x0, val x1, val x2, val x3) {
  * xN: the Nth argument.
  * returns: a 4 argument function.
  */
-inline fn3* fn4_wrap1(fn4* f, val x0) {
+static inline fn3* fn4_wrap1(fn4* f, val x0) {
 	fnx fn;
 	fn.fn4 = f;
 	fn3* x = fnx_papp(fn, 1).fn3;
@@ -720,7 +720,7 @@ inline fn3* fn4_wrap1(fn4* f, val x0) {
  * xN: the Nth argument.
  * returns: a 4 argument function.
  */
-inline fn2* fn4_wrap2(fn4* f, val x0, val x1) {
+static inline fn2* fn4_wrap2(fn4* f, val x0, val x1) {
 	fnx fn;
 	fn.fn4 = f;
 	fn2* x = fnx_papp(fn, 2).fn2;
@@ -736,7 +736,7 @@ inline fn2* fn4_wrap2(fn4* f, val x0, val x1) {
  * xN: the Nth argument.
  * returns: a 3 argument function.
  */
-inline fn1* fn4_wrap3(fn4* f, val x0, val x1, val x2) {
+static inline fn1* fn4_wrap3(fn4* f, val x0, val x1, val x2) {
 	fnx fn;
 	fn.fn4 = f;
 	fn1* x = fnx_papp(fn, 3).fn1;
@@ -753,7 +753,7 @@ inline fn1* fn4_wrap3(fn4* f, val x0, val x1, val x2) {
  * xN: the Nth argument.
  * returns: a 2 argument function.
  */
-inline fn0* fn4_wrap4(fn4* f, val x0, val x1, val x2, val x3) {
+static inline fn0* fn4_wrap4(fn4* f, val x0, val x1, val x2, val x3) {
 	fnx fn;
 	fn.fn4 = f;
 	fn0* x = fnx_papp(fn, 4).fn0;
@@ -771,7 +771,7 @@ inline fn0* fn4_wrap4(fn4* f, val x0, val x1, val x2, val x3) {
  * xN: the Nth argument.
  * returns: value from applying the function.
  */
-inline val fn3_call(fn3* f, val x0, val x1, val x2) {
+static inline val fn3_call(fn3* f, val x0, val x1, val x2) {
 	val *env = &f->env;
 	switch (f->envc) {
 	case 0: return f->fn3(x0, x1, x2);
@@ -792,7 +792,7 @@ inline val fn3_call(fn3* f, val x0, val x1, val x2) {
  * xN: the Nth argument.
  * returns: a 3 argument function.
  */
-inline fn2* fn3_wrap1(fn3* f, val x0) {
+static inline fn2* fn3_wrap1(fn3* f, val x0) {
 	fnx fn;
 	fn.fn3 = f;
 	fn2* x = fnx_papp(fn, 1).fn2;
@@ -807,7 +807,7 @@ inline fn2* fn3_wrap1(fn3* f, val x0) {
  * xN: the Nth argument.
  * returns: a 3 argument function.
  */
-inline fn1* fn3_wrap2(fn3* f, val x0, val x1) {
+static inline fn1* fn3_wrap2(fn3* f, val x0, val x1) {
 	fnx fn;
 	fn.fn3 = f;
 	fn1* x = fnx_papp(fn, 2).fn1;
@@ -823,7 +823,7 @@ inline fn1* fn3_wrap2(fn3* f, val x0, val x1) {
  * xN: the Nth argument.
  * returns: a 3 argument function.
  */
-inline fn0* fn3_wrap3(fn3* f, val x0, val x1, val x2) {
+static inline fn0* fn3_wrap3(fn3* f, val x0, val x1, val x2) {
 	fnx fn;
 	fn.fn3 = f;
 	fn0* x = fnx_papp(fn, 3).fn0;
@@ -841,7 +841,7 @@ inline fn0* fn3_wrap3(fn3* f, val x0, val x1, val x2) {
  * xN: the Nth argument.
  * returns: value from applying the function.
  */
-inline val fn2_call(fn2* f, val x0, val x1) {
+static inline val fn2_call(fn2* f, val x0, val x1) {
 	val *env = &f->env;
 	switch (f->envc) {
 	case 0: return f->fn2(x0, x1);
@@ -863,7 +863,7 @@ inline val fn2_call(fn2* f, val x0, val x1) {
  * xN: the Nth argument.
  * returns: a 2 argument function.
  */
-inline fn2* fn2_wrap1(fn2* f, val x0) {
+static inline fn2* fn2_wrap1(fn2* f, val x0) {
 	fnx fn;
 	fn.fn2 = f;
 	fn2* x = fnx_papp(fn, 1).fn2;
@@ -878,7 +878,7 @@ inline fn2* fn2_wrap1(fn2* f, val x0) {
  * xN: the Nth argument.
  * returns: a 2 argument function.
  */
-inline fn1* fn2_wrap2(fn2* f, val x0, val x1) {
+static inline fn1* fn2_wrap2(fn2* f, val x0, val x1) {
 	fnx fn;
 	fn.fn2 = f;
 	fn1* x = fnx_papp(fn, 2).fn1;
@@ -895,7 +895,7 @@ inline fn1* fn2_wrap2(fn2* f, val x0, val x1) {
  * xN: the Nth argument.
  * returns: value from applying the function.
  */
-inline val fn1_call(fn1* f, val x0) {
+static inline val fn1_call(fn1* f, val x0) {
 	val *env = &f->env;
 	switch (f->envc) {
 	case 0: return f->fn1(x0);
@@ -918,7 +918,7 @@ inline val fn1_call(fn1* f, val x0) {
  * xN: the Nth argument.
  * returns: a 0 argument function.
  */
-inline fn0* fn1_wrap1(fn1* f, val x0) {
+static inline fn0* fn1_wrap1(fn1* f, val x0) {
 	fnx fn;
 	fn.fn1 = f;
 	fn0* x = fnx_papp(fn, 1).fn0;
@@ -934,7 +934,7 @@ inline fn0* fn1_wrap1(fn1* f, val x0) {
  * xN: the Nth argument.
  * returns: value from applying the function.
  */
-inline val fn0_call(fn0* f) {
+static inline val fn0_call(fn0* f) {
 	val *env = &f->env;
 	switch (f->envc) {
 	case 0: return f->fn0();

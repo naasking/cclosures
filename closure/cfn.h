@@ -79,7 +79,7 @@ extern val cfn_papp(cfn* f, unsigned argn);
  * f: the function to call
  * returns: the value returned from applying f
  */
-inline val cfn_call0(cfn* f) {
+static inline val cfn_call0(cfn* f) {
 	val *env = &f->env;
 	switch ((f->argr << 3) | f->argp) {
 	case 0: return f->f.fn0();
@@ -102,7 +102,7 @@ inline val cfn_call0(cfn* f) {
  * arg0: the first argument
  * returns: the value returned from applying f
  */
-inline val cfn_call1(cfn* f, val arg0) {
+static inline val cfn_call1(cfn* f, val arg0) {
 	val *env = &f->env;
 	switch (((f->argr - 1) << 3) | f->argp) {
 	case 0: return f->f.fn1(arg0);
@@ -135,7 +135,7 @@ inline val cfn_call1(cfn* f, val arg0) {
  * arg1: the second argument
  * returns: the value returned from applying f
  */
-inline val cfn_call2(cfn* f, val arg0, val arg1) {
+static inline val cfn_call2(cfn* f, val arg0, val arg1) {
 	val *env = &f->env;
 	switch (((f->argr - 2) << 3) | f->argp) {
 	case 0: return f->f.fn2(arg0, arg1);
@@ -171,7 +171,7 @@ inline val cfn_call2(cfn* f, val arg0, val arg1) {
  * arg2: the third argument
  * returns: the value returned from applying f
  */
-inline val cfn_call3(cfn* f, val arg0, val arg1, val arg2) {
+static inline val cfn_call3(cfn* f, val arg0, val arg1, val arg2) {
 	val *env = &f->env;
 	switch (((f->argr - 3) << 3) | f->argp) {
 	case 0: return f->f.fn3(arg0, arg1, arg2);
@@ -209,7 +209,7 @@ inline val cfn_call3(cfn* f, val arg0, val arg1, val arg2) {
  * arg3: the fourth argument
  * returns: the value returned from applying f
  */
-inline val cfn_call4(cfn* f, val arg0, val arg1, val arg2, val arg3) {
+static inline val cfn_call4(cfn* f, val arg0, val arg1, val arg2, val arg3) {
 	val *env = &f->env;
 	switch (((f->argr - 4) << 3) | f->argp) {
 	case 0: return f->f.fn4(arg0, arg1, arg2, arg3);
@@ -249,7 +249,7 @@ inline val cfn_call4(cfn* f, val arg0, val arg1, val arg2, val arg3) {
  * arg4: the fifth argument
  * returns: the value returned from applying f
  */
-inline val cfn_call5(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
+static inline val cfn_call5(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
 	val *env = &f->env;
 	switch (((f->argr - 5) << 3) | f->argp) {
 	case 0: return f->f.fn5(arg0, arg1, arg2, arg3, arg4);
@@ -291,7 +291,7 @@ inline val cfn_call5(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4) {
  * arg5: the sixth argument
  * returns: the value returned from applying f
  */
-inline val cfn_call6(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5) {
+static inline val cfn_call6(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5) {
 	val *env = &f->env;
 	switch (((f->argr - 6) << 3) | f->argp) {
 	case 0: return f->f.fn6(arg0, arg1, arg2, arg3, arg4, arg5);
@@ -335,7 +335,7 @@ inline val cfn_call6(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, v
  * arg6: the seventh argument
  * returns: the value returned from applying f
  */
-inline val cfn_call7(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6) {
+static inline val cfn_call7(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6) {
 	val *env = &f->env;
 	switch (((f->argr - 7) << 3) | f->argp) {
 	case 0: return f->f.fn7(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
@@ -386,7 +386,7 @@ inline val cfn_call7(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, v
  * arg6: the eighth argument
  * returns: the value returned from applying f
  */
-inline val cfn_call8(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7) {
+static inline val cfn_call8(cfn* f, val arg0, val arg1, val arg2, val arg3, val arg4, val arg5, val arg6, val arg7) {
 	//val *env = &f->env;
 	if (!((f->argr - 8) << 3) && f->argp == 0) {
 		return f->f.fn8(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
